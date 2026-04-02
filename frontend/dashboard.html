@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CeylonLands.lk - Post Property</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .form-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .form-header {
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .form-header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .form-header p {
+            opacity: 0.9;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px 30px;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+
+        .step-number {
+            width: 35px;
+            height: 35px;
+            background: #cbd5e1;
+            color: white;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .step.active .step-number {
+            background: #2563eb;
+        }
+
+        .step.completed .step-number {
+            background: #10b981;
+        }
+
+        .step-label {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .step.active .step-label {
+            color: #2563eb;
+            font-weight: bold;
+        }
+
+        .form-body {
+            padding: 30px;
+        }
+
+        .form-step {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .form-step.active-step {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1e293b;
+        }
+
+        label .required {
+            color: #ef4444;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        /* Photo Upload Area */
+        .upload-area {
+            border: 2px dashed #cbd5e1;
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #f8fafc;
+        }
+
+        .upload-area:hover, .upload-area.dragover {
+            border-color: #2563eb;
+            background: #eff6ff;
+        }
+
+        .upload-area i {
+            font-size: 48px;
+            color: #64748b;
+            margin-bottom: 15px;
+        }
+
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .photo-item {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .photo-item img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+        }
+
+        .remove-photo {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .remove-photo:hover {
+            background: #ef4444;
+        }
+
+        /* Summary Box */
+        .summary-box {
+            background: #f1f5f9;
+            border-radius: 16px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .summary-label {
+            font-weight: 600;
+            color: #475569;
+        }
+
+        .summary-value {
+            color: #1e293b;
+        }
+
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .btn-prev {
+            background: #e2e8f0;
+            color: #475569;
+        }
+
+        .btn-prev:hover {
+            background: #cbd5e1;
+        }
+
+        .btn-next {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-next:hover {
+            background: #1d4ed8;
+        }
+
+        .btn-submit {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-submit:hover {
+            background: #059669;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            max-width: 400px;
+            margin: 20px;
+        }
+
+        .modal-content i {
+            font-size: 60px;
+            color: #10b981;
+            margin-bottom: 20px;
+        }
+
+        .modal-content h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .modal-content button {
+            margin-top: 20px;
+            background: #2563eb;
+            color: white;
+            padding: 10px 30px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 640px) {
+            .form-body {
+                padding: 20px;
+            }
+            .row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .step-label {
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <!-- Return Home Link -->
+        <div style="margin-bottom: 15px; text-align: left;">
+            <a href="/" style="color: white; text-decoration: none; font-weight: 500;"><i class="fas fa-arrow-left"></i> Back to Home</a>
+        </div>
+
+        <div class="form-card">
+            <!-- Header -->
+            <div class="form-header">
+                <h1><i class="fas fa-plus-circle"></i> Post Your Property</h1>
+                <p>List your property for free - Reach thousands of buyers</p>
+            </div>
+
+            <!-- Step Indicator -->
+            <div class="step-indicator">
+                <div class="step" id="step1Indicator">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Basic Info</div>
+                </div>
+                <div class="step" id="step2Indicator">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Photos</div>
+                </div>
+                <div class="step" id="step3Indicator">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Contact</div>
+                </div>
+            </div>
+
+            <!-- Form Body -->
+            <div class="form-body">
+                <!-- Step 1: Basic Information -->
+                <div id="step1" class="form-step active-step">
+                    <div class="form-group">
+                        <label>Property Title <span class="required">*</span></label>
+                        <input type="text" id="title" placeholder="e.g., Beautiful 3 Bedroom House in Colombo" autocomplete="off">
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group">
+                            <label>Property Type <span class="required">*</span></label>
+                            <select id="property_type">
+                                <option value="House">House</option>
+                                <option value="Land">Land</option>
+                                <option value="Apartment">Apartment</option>
+                                <option value="Commercial">Commercial</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Offer Type <span class="required">*</span></label>
+                            <select id="offer_type">
+                                <option value="Sale">Sale</option>
+                                <option value="Rent">Rent</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group">
+                            <label>Province <span class="required">*</span></label>
+                            <select id="province">
+                                <option value="">Select Province</option>
+                                <option value="Western">Western Province</option>
+                                <option value="Central">Central Province</option>
+                                <option value="Southern">Southern Province</option>
+                                <option value="Northern">Northern Province</option>
+                                <option value="Eastern">Eastern Province</option>
+                                <option value="North Western">North Western Province</option>
+                                <option value="North Central">North Central Province</option>
+                                <option value="Uva">Uva Province</option>
+                                <option value="Sabaragamuwa">Sabaragamuwa Province</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Town / City <span class="required">*</span></label>
+                            <input type="text" id="town" placeholder="e.g., Colombo, Kandy, Galle">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group">
+                            <label>Land Area (Perches) <span class="required">*</span></label>
+                            <input type="number" id="perch" placeholder="e.g., 10.5" step="0.01">
+                            <small style="color: #64748b;">1 Perch = 272.25 sq ft</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Price (LKR) <span class="required">*</span></label>
+                            <input type="number" id="price" placeholder="e.g., 15000000">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description <span class="required">*</span></label>
+                        <textarea id="description" rows="4" placeholder="Describe your property in detail (location, features, nearby amenities, etc.)"></textarea>
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="btn btn-prev" disabled style="opacity:0.5">Previous</button>
+                        <button class="btn btn-next" onclick="nextStep()">Next <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </div>
+
+                <!-- Step 2: Photos -->
+                <div id="step2" class="form-step">
+                    <div class="form-group">
+                        <label>Property Photos <span class="required">*</span></label>
+                        <div class="upload-area" id="uploadArea">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>Drag & drop your photos here or click to browse</p>
+                            <small>Upload up to 3 photos (JPG, PNG, WEBP)</small>
+                            <input type="file" id="photoInput" accept="image/*" multiple style="display:none">
+                        </div>
+                        <div id="photoGrid" class="photo-grid"></div>
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="btn btn-prev" onclick="prevStep()"><i class="fas fa-arrow-left"></i> Previous</button>
+                        <button class="btn btn-next" onclick="nextStep()">Next <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Contact Information -->
+                <div id="step3" class="form-step">
+                    <div class="row">
+                        <div class="form-group">
+                            <label>Your Name <span class="required">*</span></label>
+                            <input type="text" id="sellerName" placeholder="Full name">
+                        </div>
+                        <div class="form-group">
+                            <label>Phone Number <span class="required">*</span></label>
+                            <input type="tel" id="sellerPhone" placeholder="e.g., 0712345678">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email (Optional)</label>
+                        <input type="email" id="sellerEmail" placeholder="your@email.com">
+                    </div>
+
+                    <!-- Summary Box -->
+                    <div class="summary-box" id="summaryBox">
+                        <h4 style="margin-bottom: 15px; color: #1e293b;"><i class="fas fa-clipboard-list"></i> Listing Summary</h4>
+                        <div id="summaryContent"></div>
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="btn btn-prev" onclick="prevStep()"><i class="fas fa-arrow-left"></i> Previous</button>
+                        <button class="btn btn-submit" onclick="submitProperty()"><i class="fas fa-check-circle"></i> Post Property</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <i class="fas fa-check-circle"></i>
+            <h3>Success!</h3>
+            <p>Your property has been posted successfully. It will appear after admin approval.</p>
+            <button onclick="closeModal()">View Properties</button>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentStep = 1;
+        let selectedPhotos = [];
+        const API_URL = 'http://localhost:5000/api';
+
+        // DOM Elements
+        const step1 = document.getElementById('step1');
+        const step2 = document.getElementById('step2');
+        const step3 = document.getElementById('step3');
+        const step1Indicator = document.getElementById('step1Indicator');
+        const step2Indicator = document.getElementById('step2Indicator');
+        const step3Indicator = document.getElementById('step3Indicator');
+        const photoInput = document.getElementById('photoInput');
+        const uploadArea = document.getElementById('uploadArea');
+        const photoGrid = document.getElementById('photoGrid');
+
+        // Step navigation
+        function updateStepIndicators() {
+            const steps = [step1Indicator, step2Indicator, step3Indicator];
+            steps.forEach((step, index) => {
+                step.classList.remove('active', 'completed');
+                if (index + 1 === currentStep) {
+                    step.classList.add('active');
+                } else if (index + 1 < currentStep) {
+                    step.classList.add('completed');
+                }
+            });
+        }
+
+        function nextStep() {
+            if (currentStep === 1) {
+                if (!validateStep1()) return;
+                updateSummary();
+                showStep(2);
+            } else if (currentStep === 2) {
+                if (selectedPhotos.length === 0) {
+                    alert('Please upload at least one photo');
+                    return;
+                }
+                showStep(3);
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 1) {
+                showStep(currentStep - 1);
+            }
+        }
+
+        function showStep(step) {
+            step1.classList.remove('active-step');
+            step2.classList.remove('active-step');
+            step3.classList.remove('active-step');
+            
+            if (step === 1) step1.classList.add('active-step');
+            else if (step === 2) step2.classList.add('active-step');
+            else if (step === 3) step3.classList.add('active-step');
+            
+            currentStep = step;
+            updateStepIndicators();
+        }
+
+        // Validate Step 1
+        function validateStep1() {
+            const title = document.getElementById('title').value.trim();
+            const province = document.getElementById('province').value;
+            const town = document.getElementById('town').value.trim();
+            const perch = document.getElementById('perch').value;
+            const price = document.getElementById('price').value;
+            const description = document.getElementById('description').value.trim();
+
+            if (!title) { alert('Please enter property title'); return false; }
+            if (!province) { alert('Please select province'); return false; }
+            if (!town) { alert('Please enter town/city'); return false; }
+            if (!perch || perch <= 0) { alert('Please enter valid land area in perches'); return false; }
+            if (!price || price <= 0) { alert('Please enter valid price'); return false; }
+            if (!description || description.length < 20) { alert('Please enter a description (minimum 20 characters)'); return false; }
+            
+            return true;
+        }
+
+        // Update summary
+        function updateSummary() {
+            const title = document.getElementById('title').value;
+            const province = document.getElementById('province').value;
+            const town = document.getElementById('town').value;
+            const perch = document.getElementById('perch').value;
+            const price = document.getElementById('price').value;
+            const description = document.getElementById('description').value;
+            
+            const summaryContent = document.getElementById('summaryContent');
+            summaryContent.innerHTML = `
+                <div class="summary-item">
+                    <span class="summary-label">Property Title:</span>
+                    <span class="summary-value">${title}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Location:</span>
+                    <span class="summary-value">${town}, ${province}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Land Area:</span>
+                    <span class="summary-value">${perch} perches (${(perch * 272.25).toLocaleString()} sq ft)</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Price:</span>
+                    <span class="summary-value">LKR ${parseInt(price).toLocaleString()}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Photos:</span>
+                    <span class="summary-value">${selectedPhotos.length} image(s)</span>
+                </div>
+            `;
+        }
+
+        // Photo upload handling
+        function setupPhotoUpload() {
+            uploadArea.addEventListener('click', () => {
+                photoInput.click();
+            });
+
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('dragover');
+            });
+
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                handleFiles(e.dataTransfer.files);
+            });
+
+            photoInput.addEventListener('change', (e) => {
+                handleFiles(e.target.files);
+            });
+        }
+
+        function handleFiles(files) {
+            const totalPhotos = selectedPhotos.length + files.length;
+            if (totalPhotos > 3) {
+                alert('You can upload maximum 3 photos');
+                return;
+            }
+
+            Array.from(files).forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        selectedPhotos.push({
+                            file: file,
+                            preview: e.target.result
+                        });
+                        displayPhotos();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        function displayPhotos() {
+            photoGrid.innerHTML = '';
+            selectedPhotos.forEach((photo, index) => {
+                const div = document.createElement('div');
+                div.className = 'photo-item';
+                div.innerHTML = `
+                    <img src="${photo.preview}" alt="Photo ${index + 1}">
+                    <button class="remove-photo" onclick="removePhoto(${index})">×</button>
+                `;
+                photoGrid.appendChild(div);
+            });
+        }
+
+        function removePhoto(index) {
+            selectedPhotos.splice(index, 1);
+            displayPhotos();
+        }
+
+        // Submit property
+        async function submitProperty() {
+            const sellerName = document.getElementById('sellerName').value.trim();
+            const sellerPhone = document.getElementById('sellerPhone').value.trim();
+
+            if (!sellerName) { alert('Please enter your name'); return; }
+            if (!sellerPhone) { alert('Please enter your phone number'); return; }
+
+            const submitBtn = document.querySelector('.btn-submit');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Posting...';
+            submitBtn.disabled = true;
+
+            try {
+                // Convert photos to base64 for storage
+                const photoUrls = selectedPhotos.map(p => p.preview);
+                
+                const propertyData = {
+                    title: document.getElementById('title').value,
+                    description: document.getElementById('description').value,
+                    price: parseInt(document.getElementById('price').value),
+                    property_type: document.getElementById('property_type').value,
+                    offer_type: document.getElementById('offer_type').value,
+                    bedrooms: null,
+                    bathrooms: null,
+                    land_area: parseFloat(document.getElementById('perch').value),
+                    address: document.getElementById('town').value + ', ' + document.getElementById('province').value,
+                    city: document.getElementById('town').value,
+                    district: document.getElementById('province').value,
+                    seller_name: sellerName,
+                    seller_phone: sellerPhone,
+                    seller_email: document.getElementById('sellerEmail').value,
+                    images: JSON.stringify(photoUrls)
+                };
+
+                const response = await fetch(`${API_URL}/properties`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(propertyData)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to post property');
+                }
+
+                // Show success modal
+                document.getElementById('successModal').style.display = 'flex';
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error posting property. Please try again.');
+            } finally {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('successModal').style.display = 'none';
+            window.location.href = '/';
+        }
+
+        // Initialize
+        setupPhotoUpload();
+        updateStepIndicators();
+    </script>
+</body>
+</html>

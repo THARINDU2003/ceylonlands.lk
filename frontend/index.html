@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CeylonLands.lk - Sri Lanka's Property Marketplace</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body class="bg-gray-100">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <a href="/" class="flex items-center">
+                    <img src="/images/logo.png" alt="CeylonLands.lk Logo" class="h-14">
+                </a>
+                <div class="space-x-6">
+                    <a href="/index.html" class="text-gray-700 hover:text-blue-600">Home</a>
+                    <a href="/properties.html" class="text-gray-700 hover:text-blue-600">Properties</a>
+                    <a href="/dashboard.html" class="text-gray-700 hover:text-blue-600">User Dashboard</a>
+                    <a href="/admin.html" class="text-gray-700 hover:text-blue-600">Admin Stats</a>
+                    <a href="#" id="postAdBtn"
+                        class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Post Free Ad</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section with Search -->
+    <section class="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-20">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <h1 class="text-5xl font-bold mb-4">Find Your Dream Property in Sri Lanka</h1>
+            <p class="text-xl mb-8">Buy, Sell, Rent - Lands, Houses, Apartments</p>
+
+            <!-- Search Form -->
+            <div class="bg-white rounded-lg p-6 max-w-4xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <input type="text" id="searchLocation" placeholder="Location (City/District)"
+                        class="text-gray-800 px-4 py-2 border rounded">
+                    <select id="searchType" class="text-gray-800 px-4 py-2 border rounded">
+                        <option value="">All Types</option>
+                        <option value="Land">Land</option>
+                        <option value="House">House</option>
+                        <option value="Apartment">Apartment</option>
+                        <option value="Commercial">Commercial</option>
+                    </select>
+                    <select id="searchOffer" class="text-gray-800 px-4 py-2 border rounded">
+                        <option value="">All</option>
+                        <option value="Sale">For Sale</option>
+                        <option value="Rent">For Rent</option>
+                    </select>
+                    <button onclick="searchProperties()"
+                        class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">Search</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Properties -->
+    <section class="max-w-7xl mx-auto px-4 py-16">
+        <h2 class="text-3xl font-bold mb-8">Featured Properties</h2>
+        <div id="featuredGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Properties will be loaded here -->
+        </div>
+    </section>
+
+    <!-- Why Choose Us -->
+    <section class="bg-white py-16">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold mb-12">Why Choose CeylonLands?</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <div class="text-4xl mb-4">🏠</div>
+                    <h3 class="text-xl font-bold mb-2">1000+ Properties</h3>
+                    <p class="text-gray-600">Wide range of properties across Sri Lanka</p>
+                </div>
+                <div>
+                    <div class="text-4xl mb-4">💰</div>
+                    <h3 class="text-xl font-bold mb-2">Free Listing</h3>
+                    <p class="text-gray-600">Post your property ads for free</p>
+                </div>
+                <div>
+                    <div class="text-4xl mb-4">🤝</div>
+                    <h3 class="text-xl font-bold mb-2">Direct Contact</h3>
+                    <p class="text-gray-600">Connect directly with sellers</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p>&copy; 2024 CeylonLands.lk - Sri Lanka's Property Marketplace</p>
+        </div>
+    </footer>
+
+    <script src="/js/main.js"></script>
+    <script>
+        // Load featured properties on page load
+        loadFeaturedProperties();
+
+        async function loadFeaturedProperties() {
+            const response = await fetch('http://localhost:5000/api/featured');
+            const properties = await response.json();
+
+            const grid = document.getElementById('featuredGrid');
+            grid.innerHTML = properties.map(prop => {
+                let imagesArray = [];
+                try { imagesArray = JSON.parse(prop.images || '[]'); } catch(e){}
+                let firstImage = 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=500';
+                if (imagesArray.length > 0) {
+                    firstImage = imagesArray[0];
+                    if (!firstImage.startsWith('data:') && !firstImage.startsWith('http')) {
+                        firstImage = '/images/' + firstImage;
+                    }
+                }
+                
+                return `
+                <div class="property-card" onclick="window.location.href='/property-detail.html?id=${prop.id}'">
+                    <div class="card-image">
+                        <img src="${firstImage}" alt="${prop.title}">
+                        <span class="sale-badge">For ${prop.offer_type || 'Sale'}</span>
+                        <div class="wishlist-btn">
+                            <i class="far fa-heart"></i>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="property-title">${prop.title}</h3>
+                        <div class="property-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>${prop.city}, ${prop.district}</span>
+                        </div>
+                        <div class="divider"></div>
+                        <div class="price-section">
+                            <div class="price">
+                                LKR ${prop.price.toLocaleString()}
+                            </div>
+                            <button class="view-btn">
+                                View Property &rarr;
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        function searchProperties() {
+            const location = document.getElementById('searchLocation').value;
+            const type = document.getElementById('searchType').value;
+            const offer = document.getElementById('searchOffer').value;
+            window.location.href = `/properties.html?location=${location}&type=${type}&offer=${offer}`;
+        }
+
+        document.getElementById('postAdBtn').addEventListener('click', () => {
+            window.location.href = '/dashboard.html?action=post';
+        });
+    </script>
+</body>
+
+</html>
