@@ -6,19 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Properties - CeylonLands.lk</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body class="bg-gray-100">
-    <nav class="bg-white shadow-lg">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4">
             <div class="flex justify-between items-center py-4">
                 <a href="/" class="flex items-center">
                     <img src="/images/logo.png" alt="CeylonLands.lk Logo" class="h-14">
                 </a>
                 <div class="space-x-6">
-                    <a href="/" class="text-gray-700 hover:text-blue-600">Home</a>
-                    <a href="/properties.html" class="text-gray-700 hover:text-blue-600">Properties</a>
-                    <a href="/dashboard.html" class="text-gray-700 hover:text-blue-600">Dashboard</a>
+                    <a href="/index.html" class="text-gray-700 hover:text-blue-600 font-medium">Home</a>
+                    <a href="/properties.html" class="text-blue-600 font-bold border-b-2 border-blue-600">Properties</a>
+                    <a href="/pricing.html" class="text-gray-700 hover:text-blue-600 font-medium">Ad Plans</a>
+                    <a href="/dashboard.html" class="text-gray-700 hover:text-blue-600 font-medium">Dashboard</a>
                     <a href="/dashboard.html?action=post"
                         class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Post Free Ad</a>
                 </div>
@@ -27,39 +31,39 @@
     </nav>
 
     <div class="max-w-7xl mx-auto px-4 py-8">
-        <div class="flex gap-8">
+        <div class="flex flex-col md:flex-row gap-8">
             <!-- Filters Sidebar -->
-            <div class="w-1/4 bg-white p-4 rounded-lg shadow h-fit">
-                <h3 class="font-bold text-lg mb-4">Filters</h3>
-                <div class="space-y-4">
+            <div class="w-full md:w-1/4 bg-white p-6 rounded-2xl shadow-sm h-fit">
+                <h3 class="font-bold text-xl mb-6 text-gray-800">Search Filters</h3>
+                <div class="space-y-6">
                     <div>
-                        <label class="block text-sm font-medium mb-1">Property Type</label>
-                        <select id="filterType" class="w-full border rounded p-2">
-                            <option value="">All</option>
+                        <label for="filterType" class="block text-sm font-bold text-gray-700 mb-2">Property Type</label>
+                        <select id="filterType" class="w-full border-2 border-gray-100 rounded-xl p-3 focus:border-blue-600 outline-none transition">
+                            <option value="">All Types</option>
                             <option value="Land">Land</option>
                             <option value="House">House</option>
                             <option value="Apartment">Apartment</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium mb-1">Offer Type</label>
-                        <select id="filterOffer" class="w-full border rounded p-2">
-                            <option value="">All</option>
+                        <label for="filterOffer" class="block text-sm font-bold text-gray-700 mb-2">Offer Type</label>
+                        <select id="filterOffer" class="w-full border-2 border-gray-100 rounded-xl p-3 focus:border-blue-600 outline-none transition">
+                            <option value="">All Offers</option>
                             <option value="Sale">For Sale</option>
                             <option value="Rent">For Rent</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium mb-1">Min Price (LKR)</label>
-                        <input type="number" id="filterMinPrice" placeholder="Min" class="w-full border rounded p-2">
+                        <label for="filterMinPrice" class="block text-sm font-bold text-gray-700 mb-2">Min Price (LKR)</label>
+                        <input type="number" id="filterMinPrice" placeholder="Min" class="w-full border-2 border-gray-100 rounded-xl p-3">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium mb-1">Max Price (LKR)</label>
-                        <input type="number" id="filterMaxPrice" placeholder="Max" class="w-full border rounded p-2">
+                        <label for="filterMaxPrice" class="block text-sm font-bold text-gray-700 mb-2">Max Price (LKR)</label>
+                        <input type="number" id="filterMaxPrice" placeholder="Max" class="w-full border-2 border-gray-100 rounded-xl p-3">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium mb-1">Bedrooms</label>
-                        <select id="filterBedrooms" class="w-full border rounded p-2">
+                        <label for="filterBedrooms" class="block text-sm font-bold text-gray-700 mb-2">Bedrooms</label>
+                        <select id="filterBedrooms" class="w-full border-2 border-gray-100 rounded-xl p-3 focus:border-blue-600 outline-none transition">
                             <option value="">Any</option>
                             <option value="1">1+</option>
                             <option value="2">2+</option>
@@ -67,21 +71,53 @@
                             <option value="4">4+</option>
                         </select>
                     </div>
-                    <button onclick="applyFilters()" class="w-full bg-blue-600 text-white py-2 rounded-lg">Apply
-                        Filters</button>
+                    <button onclick="applyFilters()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-100 transition">
+                        Apply Filters
+                    </button>
+                    <button onclick="window.location.href='/properties.html'" class="w-full text-gray-500 font-medium py-2 hover:text-blue-600">
+                        Reset All
+                    </button>
                 </div>
             </div>
 
             <!-- Properties Grid -->
-            <div class="w-3/4">
-                <div id="propertiesGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Properties loaded here -->
+            <div class="w-full md:w-3/4">
+                <div id="propertiesGrid" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Properties will be loaded dynamically by main.js -->
+                    <div class="col-span-full py-20 text-center">
+                        <div class="animate-pulse flex flex-col items-center">
+                            <div class="h-10 w-10 bg-gray-200 rounded-full mb-4"></div>
+                            <p class="text-gray-400">Loading properties...</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12 mt-20">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p>&copy; 2024 CeylonLands.lk - Sri Lanka's Property Marketplace</p>
+        </div>
+    </footer>
+
     <script src="/js/main.js"></script>
+    <script>
+        function applyFilters() {
+            const filters = {
+                type: document.getElementById('filterType').value,
+                offer: document.getElementById('filterOffer').value,
+                minPrice: document.getElementById('filterMinPrice').value,
+                maxPrice: document.getElementById('filterMaxPrice').value,
+                bedrooms: document.getElementById('filterBedrooms').value
+            };
+            window.loadProperties(filters);
+        }
+        
+        // Expose to window for inline calls
+        window.applyFilters = applyFilters;
+    </script>
 </body>
 
 </html>

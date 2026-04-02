@@ -122,12 +122,12 @@
 <body>
 
     <!-- Sidebar -->
-    <div class="sidebar">
+    <div class="sidebar text-gray-800">
         <div class="mb-10 flex items-center gap-2">
             <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
                 <i class="fas fa-home text-white"></i>
             </div>
-            <span class="text-xl font-bold text-gray-800">CeylonLands.lk</span>
+            <span class="text-xl font-bold">CeylonLands.lk</span>
         </div>
 
         <nav>
@@ -142,6 +142,9 @@
             </a>
             <a href="#" class="nav-item">
                 <i class="fas fa-wallet"></i> Income
+            </a>
+            <a href="/pricing.html" class="nav-item">
+                <i class="fas fa-tags"></i> Ad Plans
             </a>
             <a href="#" class="nav-item">
                 <i class="fas fa-comment-dots"></i> Chat
@@ -164,8 +167,8 @@
             </div>
             <div class="flex items-center gap-6">
                 <div class="search-container">
-                    <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Search...">
+                    <i class="fas fa-search text-gray-400"></i>
+                    <input type="text" placeholder="Search..." title="Search properties">
                 </div>
                 <div class="flex items-center gap-3">
                     <img src="https://ui-avatars.com/api/?name=Admin&background=2563eb&color=fff"
@@ -182,13 +185,13 @@
                 <div class="text-sm opacity-80" id="totalCount">0 properties listed</div>
             </div>
             <div class="stat-card">
-                <div class="text-gray-500 mb-4">Properties for Sale</div>
-                <div class="text-2xl font-bold mb-1" id="saleValue">LKR 0</div>
+                <div class="text-gray-500 mb-4 text-gray-800">Properties for Sale</div>
+                <div class="text-2xl font-bold mb-1 text-gray-800" id="saleValue">LKR 0</div>
                 <div class="text-xs text-green-500 font-semibold" id="saleCount">0 Total Sales</div>
             </div>
             <div class="stat-card">
-                <div class="text-gray-500 mb-4">Properties for Rent</div>
-                <div class="text-2xl font-bold mb-1" id="rentValue">LKR 0</div>
+                <div class="text-gray-500 mb-4 text-gray-800">Properties for Rent</div>
+                <div class="text-2xl font-bold mb-1 text-gray-800" id="rentValue">LKR 0</div>
                 <div class="text-xs text-blue-500 font-semibold" id="rentCount">0 Total Rent</div>
             </div>
         </div>
@@ -198,7 +201,7 @@
             <div class="lg:col-span-2 chart-container">
                 <div class="flex justify-between items-center mb-6">
                     <h3 class="font-bold text-gray-800">Total Overview</h3>
-                    <select class="bg-gray-100 border-none rounded-lg text-sm px-3 py-1 outline-none">
+                    <select class="bg-gray-100 border-none rounded-lg text-sm px-3 py-1 outline-none text-gray-800" aria-label="Select period" title="Select period">
                         <option>Monthly</option>
                     </select>
                 </div>
@@ -206,8 +209,8 @@
                     <canvas id="overviewChart"></canvas>
                 </div>
             </div>
-            <div class="chart-container">
-                <h3 class="font-bold text-gray-800 mb-6">Property Sale & Rent</h3>
+            <div class="chart-container text-gray-800">
+                <h3 class="font-bold mb-6">Property Sale & Rent</h3>
                 <div style="height: 220px;" class="mb-4">
                     <canvas id="donutChart"></canvas>
                 </div>
@@ -226,15 +229,15 @@
 
         <!-- Bottom Section -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div class="lg:col-span-2 chart-container">
-                <h3 class="font-bold text-gray-800 mb-6">Total Revenue</h3>
+            <div class="lg:col-span-2 chart-container text-gray-800">
+                <h3 class="font-bold mb-6">Total Revenue</h3>
                 <div style="height: 250px;">
                     <canvas id="revenueChart"></canvas>
                 </div>
             </div>
-            <div class="chart-container">
+            <div class="chart-container text-gray-800">
                 <div class="flex justify-between items-center mb-6">
-                    <h3 class="font-bold text-gray-800">New List</h3>
+                    <h3 class="font-bold">New List</h3>
                     <a href="/properties.html" class="text-sm text-blue-600 font-semibold">View All</a>
                 </div>
                 <div id="recentList">
@@ -242,6 +245,10 @@
                 </div>
             </div>
         </div>
+
+        <footer class="mt-12 py-6 text-center text-sm text-gray-500 border-t border-gray-100">
+            &copy; 2024 CeylonLands.lk. All rights reserved.
+        </footer>
     </div>
 
     <script src="/js/admin.js"></script>
