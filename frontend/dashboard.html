@@ -110,7 +110,7 @@
             <header class="form-header">
                 <div class="flex justify-center mb-6">
                     <a href="/" class="logo-container">
-                        <img src="/images/logo.png" alt="CeylonLands Icon" class="h-16 w-auto brightness-0 invert">
+                        <img src="/images/logo.png" alt="CeylonLands Icon" class="brightness-0 invert">
                         <div class="logo-text text-left">
                             <span class="brand-main !text-white">Ceylon</span>
                             <div class="brand-sub">
@@ -128,9 +128,18 @@
                 </div>
                 <h1>Submit Your Property</h1>
                 <p>Fill in the details below to list your property on CeylonLands.lk</p>
-                <div class="nav-links">
+                <div class="nav-links flex items-center justify-center gap-4">
                     <a href="/index.html">Back to Home</a>
                     <a href="/pricing.html">View Ad Plans</a>
+                    
+                    <!-- Premium Dark Mode Lamp Toggle -->
+                    <div class="lamp-toggle-container group ml-0" title="Toggle Dark Mode">
+                        <div class="lamp-body !w-6 !h-8">
+                            <div class="lamp-glow !w-12 !h-12"></div>
+                            <div class="lamp-base !w-8"></div>
+                        </div>
+                        <div class="pull-string !h-32"></div>
+                    </div>
                 </div>
             </header>
 
@@ -244,6 +253,55 @@
         </div>
     </div>
 
+    <!-- Auth Script -->
+    <script src="/js/theme.js"></script>
+    <script src="/js/auth.js"></script>
     <script src="/js/main.js"></script>
+    <script>
+        // Check if user is logged in
+        if (!localStorage.getItem('token')) {
+            window.location.href = '/login.html?redirect=dashboard.html';
+        }
+
+        // Auto-fill seller info if available
+        document.addEventListener('DOMContentLoaded', () => {
+            const userData = localStorage.getItem('user');
+            if (userData) {
+                const user = JSON.parse(userData);
+                document.getElementById('sellerNameInput').value = user.name || '';
+                document.getElementById('sellerEmail').value = user.email || '';
+            }
+        });
+
+        async function postProperty(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+            
+            // Handle images (placeholder for now)
+            data.images = JSON.stringify(['dummy.jpg']);
+            
+            try {
+                const response = await fetch('http://localhost:5000/api/properties', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (response.ok) {
+                    alert('Property listed successfully! It will be reviewed soon.');
+                    window.location.href = '/index.html';
+                } else {
+                    const err = await response.json();
+                    alert('Error: ' + err.error);
+                }
+            } catch (err) {
+                alert('Network error. Please try again.');
+            }
+        }
+    </script>
 </body>
 </html>

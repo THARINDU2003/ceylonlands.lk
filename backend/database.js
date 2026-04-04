@@ -44,6 +44,18 @@ db.serialize(() => {
         )
     `);
 
+    // Users table
+    db.run(`
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            email TEXT UNIQUE NOT NULL,
+            password TEXT NOT NULL,
+            role TEXT DEFAULT 'user',
+            created_at DATETIME DEFAULT (datetime('now'))
+        )
+    `);
+
     // Sample data (for testing)
     db.get("SELECT COUNT(*) as count FROM properties", (err, row) => {
         if (row.count === 0) {

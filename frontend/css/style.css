@@ -1,3 +1,32 @@
+/* Design System Variables */
+:root {
+    --bg-primary: #f9fafb;
+    --bg-card: #ffffff;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --border-color: #e2e8f0;
+    --brand-blue: #1e3a8a;
+    --brand-green: #059669;
+    --hero-gradient: linear-gradient(to right, #2563eb, #1e40af);
+}
+
+.dark-theme {
+    --bg-primary: #0f172a;
+    --bg-card: #1e293b;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --border-color: #334155;
+    --brand-blue: #3b82f6;
+    --brand-green: #10b981;
+    --hero-gradient: linear-gradient(to right, #1e40af, #0f172a);
+}
+
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-main);
+    transition: background-color 0.3s, color 0.3s;
+}
+
 /* Custom styles */
 .search-box:focus {
     outline: none;
@@ -6,11 +35,11 @@
 
 /* Property Card Styles */
 .property-card {
-    background: white;
+    background: var(--bg-card);
     border-radius: 16px;
     overflow: hidden;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s;
     width: 100%;
     cursor: pointer;
 }
@@ -57,7 +86,7 @@
     position: absolute;
     top: 15px;
     right: 15px;
-    background: white;
+    background: var(--bg-card);
     width: 34px;
     height: 34px;
     border-radius: 50%;
@@ -82,7 +111,7 @@
 .property-title {
     font-size: 18px;
     font-weight: 700;
-    color: #1e293b;
+    color: var(--text-main);
     margin-bottom: 8px;
     line-height: 1.4;
     white-space: nowrap;
@@ -94,7 +123,7 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    color: #64748b;
+    color: var(--text-muted);
     font-size: 13px;
     margin-bottom: 12px;
 }
@@ -107,7 +136,7 @@
 /* Divider */
 .divider {
     height: 1px;
-    background: #e2e8f0;
+    background: var(--border-color);
     margin: 12px 0;
 }
 
@@ -143,12 +172,26 @@
     transform: scale(1.02);
 }
 
-/* Logo Animation Styles */
+/* Logo & Animation Styles */
 .logo-container {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 1.25rem;
     text-decoration: none !important;
+}
+
+.logo-container img {
+    height: 80px; /* Increased Size */
+    width: auto;
+    animation: elephantWalk 2s ease-in-out infinite;
+    transform-origin: bottom center;
+}
+
+@keyframes elephantWalk {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    25% { transform: translateY(-4px) rotate(-4deg); }
+    50% { transform: translateY(0) rotate(0deg); }
+    75% { transform: translateY(-4px) rotate(4deg); }
 }
 
 .logo-text {
@@ -159,24 +202,24 @@
 }
 
 .brand-main {
-    font-size: 1.5rem;
-    font-weight: 900;
-    color: #1e3a8a; /* Navy Blue */
-    letter-spacing: -0.5px;
+    font-size: 2.25rem; /* Increased Size */
+    font-weight: 950;
+    color: var(--brand-blue);
+    letter-spacing: -1.5px;
 }
 
 .brand-sub {
     display: flex;
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: #059669; /* Emerald Green */
+    font-size: 1.5rem; /* Increased Size */
+    font-weight: 800;
+    color: var(--brand-green);
 }
 
 .animated-letter {
     display: inline-block;
     opacity: 0;
-    transform: translateY(8px);
-    animation: revealLetter 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    transform: translateY(12px);
+    animation: revealLetter 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
 @keyframes revealLetter {
@@ -188,10 +231,95 @@
 
 /* Staggered delays for "lands.lk" (8 characters) */
 .animated-letter:nth-child(1) { animation-delay: 0.1s; }
-.animated-letter:nth-child(2) { animation-delay: 0.18s; }
-.animated-letter:nth-child(3) { animation-delay: 0.26s; }
-.animated-letter:nth-child(4) { animation-delay: 0.34s; }
-.animated-letter:nth-child(5) { animation-delay: 0.42s; }
-.animated-letter:nth-child(6) { animation-delay: 0.50s; }
-.animated-letter:nth-child(7) { animation-delay: 0.58s; }
-.animated-letter:nth-child(8) { animation-delay: 0.66s; }
+.animated-letter:nth-child(2) { animation-delay: 0.2s; }
+.animated-letter:nth-child(3) { animation-delay: 0.3s; }
+.animated-letter:nth-child(4) { animation-delay: 0.4s; }
+.animated-letter:nth-child(5) { animation-delay: 0.5s; }
+.animated-letter:nth-child(6) { animation-delay: 0.6s; }
+.animated-letter:nth-child(7) { animation-delay: 0.7s; }
+.animated-letter:nth-child(8) { animation-delay: 0.8s; }
+
+/* Premium Dark Mode Lamp Toggle (Pull String) */
+.lamp-toggle-container {
+    position: relative;
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.lamp-body {
+    width: 32px;
+    height: 40px;
+    background: #fbbf24; /* Lamp Glow Gold */
+    border-radius: 50% 50% 10px 10px;
+    position: relative;
+    box-shadow: 0 0 20px rgba(251, 191, 36, 0.4);
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.dark-theme .lamp-body {
+    background: #475569;
+    box-shadow: none;
+}
+
+.lamp-base {
+    width: 40px;
+    height: 8px;
+    background: #475569;
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 0 0 4px 4px;
+}
+
+.pull-string {
+    width: 2px;
+    height: 50px;
+    background: #cbd5e1;
+    position: absolute;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: height 0.2s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.pull-string::after {
+    content: '';
+    width: 12px;
+    height: 20px;
+    background: #1e293b;
+    border-radius: 4px;
+    position: absolute;
+    bottom: -15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.pull-string:active {
+    height: 70px;
+}
+
+.lamp-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    background: radial-gradient(circle, rgba(251, 191, 36, 0.6) 0%, rgba(251, 191, 36, 0) 70%);
+    opacity: 1;
+    transition: opacity 0.3s;
+    z-index: 5;
+}
+
+.dark-theme .lamp-glow {
+    opacity: 0;
+}
