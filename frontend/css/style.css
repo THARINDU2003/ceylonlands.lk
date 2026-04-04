@@ -142,3 +142,56 @@
     background: linear-gradient(135deg, #1d4ed8, #1e3a8a);
     transform: scale(1.02);
 }
+
+/* Logo Animation Styles */
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none !important;
+}
+
+.logo-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    line-height: 1;
+}
+
+.brand-main {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: #1e3a8a; /* Navy Blue */
+    letter-spacing: -0.5px;
+}
+
+.brand-sub {
+    display: flex;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #059669; /* Emerald Green */
+}
+
+.animated-letter {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(8px);
+    animation: revealLetter 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes revealLetter {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Staggered delays for "lands.lk" (8 characters) */
+.animated-letter:nth-child(1) { animation-delay: 0.1s; }
+.animated-letter:nth-child(2) { animation-delay: 0.18s; }
+.animated-letter:nth-child(3) { animation-delay: 0.26s; }
+.animated-letter:nth-child(4) { animation-delay: 0.34s; }
+.animated-letter:nth-child(5) { animation-delay: 0.42s; }
+.animated-letter:nth-child(6) { animation-delay: 0.50s; }
+.animated-letter:nth-child(7) { animation-delay: 0.58s; }
+.animated-letter:nth-child(8) { animation-delay: 0.66s; }
