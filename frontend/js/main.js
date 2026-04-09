@@ -3,7 +3,7 @@ const UPLOADS_URL = 'http://localhost:5000/uploads/';
 
 // Helper to resolve property images
 function resolveImagePath(path, size = '500') {
-    if (!path) return `https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=${size}`;
+    if (!path) return '';
     if (path.startsWith('data:') || path.startsWith('http')) return path;
     return UPLOADS_URL + path;
 }
@@ -34,11 +34,12 @@ async function loadProperties(filters = {}) {
             let imagesArray = [];
             try { imagesArray = JSON.parse(prop.images || '[]'); } catch(e){}
             const firstImage = resolveImagePath(imagesArray[0]);
+            const imageHtml = firstImage ? `<img src="${firstImage}" alt="${prop.title}" loading="lazy">` : `<div class="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400"><i class="fas fa-home fa-3x"></i></div>`;
             
             return `
             <div class="property-card" onclick="window.location.href='/property-detail.html?id=${prop.id}'">
                 <div class="card-image">
-                    <img src="${firstImage}" alt="${prop.title}" loading="lazy">
+                    ${imageHtml}
                     <span class="sale-badge">For ${prop.offer_type || 'Sale'}</span>
                     <div class="wishlist-btn" onclick="event.stopPropagation(); toggleWishlist(${prop.id})">
                         <i class="far fa-heart"></i>
@@ -84,11 +85,12 @@ async function loadFeaturedProperties() {
             let imagesArray = [];
             try { imagesArray = JSON.parse(prop.images || '[]'); } catch(e){}
             const firstImage = resolveImagePath(imagesArray[0]);
+            const imageHtml = firstImage ? `<img src="${firstImage}" alt="${prop.title}">` : `<div class="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400"><i class="fas fa-star fa-3x"></i></div>`;
             
             return `
             <div class="property-card flex-shrink-0" onclick="window.location.href='/property-detail.html?id=${prop.id}'">
                 <div class="card-image">
-                    <img src="${firstImage}" alt="${prop.title}">
+                    ${imageHtml}
                     <span class="sale-badge">Featured</span>
                 </div>
                 <div class="card-content">

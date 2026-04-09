@@ -126,12 +126,15 @@ app.get('/api/properties/:id', (req, res) => {
 
 // Create new property (Seller)
 app.post('/api/properties', (req, res) => {
-    const { title, description, price, property_type, offer_type, bedrooms, bathrooms, land_area, address, city, district, seller_name, seller_phone, seller_email, images } = req.body;
+    const { title, description, price, property_type, offer_type, bedrooms, bathrooms, land_area, address, city, district, seller_name, seller_phone, seller_email, images, status } = req.body;
     
+    // Use the provided status or default to 'pending'
+    const propStatus = status === 'draft' ? 'draft' : 'pending';
+
     const sql = `INSERT INTO properties (title, description, price, property_type, offer_type, bedrooms, bathrooms, land_area, address, city, district, seller_name, seller_phone, seller_email, images, status, created_at) 
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', datetime('now'))`;
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))`;
     
-    db.run(sql, [title, description, price, property_type, offer_type, bedrooms, bathrooms, land_area, address, city, district, seller_name, seller_phone, seller_email, images], function(err) {
+    db.run(sql, [title, description, price, property_type, offer_type, bedrooms, bathrooms, land_area, address, city, district, seller_name, seller_phone, seller_email, images, propStatus], function(err) {
         if (err) {
             res.status(500).json({ error: err.message });
             return;
