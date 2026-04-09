@@ -10,6 +10,20 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="/css/style.css">
     <script>if(localStorage.getItem('theme')==='dark'){document.documentElement.classList.add('dark-theme');}</script>
+    <script>
+        // Admin Protection
+        const token = localStorage.getItem('token');
+        const userStr = localStorage.getItem('user');
+        if (!token || !userStr) {
+            window.location.href = '/login.html';
+        } else {
+            const user = JSON.parse(userStr);
+            if (user.role !== 'admin') {
+                alert('Access Denied: Admins Only');
+                window.location.href = '/index.html';
+            }
+        }
+    </script>
     <style>
         :root {
             --sidebar-width: 240px;
@@ -142,9 +156,12 @@
             </div>
         </div>
 
-        <nav>
-            <a href="#" class="nav-item active">
+        <nav id="adminNav">
+            <a href="#" class="nav-item active" data-view="dashboardView">
                 <i class="fas fa-th-large"></i> Dashboard
+            </a>
+            <a href="#" class="nav-item" data-view="manageView">
+                <i class="fas fa-edit"></i> Website Edit
             </a>
             <a href="/properties.html" class="nav-item">
                 <i class="fas fa-building"></i> Properties
@@ -189,7 +206,9 @@
             </div>
         </div>
 
-        <!-- Stats Grid -->
+        <!-- Views Container -->
+        <div id="dashboardView">
+            <!-- Stats Grid -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div class="stat-card primary">
                 <div class="mb-4">Total Properties</div>
@@ -254,6 +273,31 @@
                 </div>
                 <div id="recentList">
                     <!-- Loaded dynamically -->
+                </div>
+            </div>
+        </div>
+        </div> <!-- End Dashboard View -->
+
+        <div id="manageView" class="hidden">
+            <div class="chart-container text-gray-800">
+                <h3 class="font-bold mb-6 text-xl border-b pb-4">Manage Properties Listing</h3>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b bg-gray-50">
+                                <th class="py-3 px-4 font-semibold text-sm">Image</th>
+                                <th class="py-3 px-4 font-semibold text-sm">Title & Location</th>
+                                <th class="py-3 px-4 font-semibold text-sm">Price</th>
+                                <th class="py-3 px-4 font-semibold text-sm">Status</th>
+                                <th class="py-3 px-4 font-semibold text-sm text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminPropertiesList">
+                            <tr>
+                                <td colspan="5" class="text-center py-6">Loading properties...</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

@@ -49,6 +49,29 @@ app.post('/api/auth/register', async (req, res) => {
     }
 });
 
+// Admin Setup
+app.post('/api/auth/setup-admin', async (req, res) => {
+    const { name, email, password } = req.body;
+    
+    // Check if an admin already exists
+    db.get(`SELECT COUNT(*) as count FROM users WHERE role = 'admin'`, async (err, row) => {
+        if (err) return res.status(500).json({ error: err.message });
+        if (row.count > 0) return res.status(403).json({ error: 'Admin account already exists.' });
+        
+        try {
+            const hashedPassword = await bcrypt.hash(password, 10);
+            const sql = `INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, 'admin')`;
+            
+            db.run(sql, [name, email, hashedPassword], function(err) {
+                if (err) return res.status(500).json({ error: err.message });
+                res.status(201).json({ message: 'Admin setup successfully', userId: this.lastID });
+            });
+        } catch (err) {
+            res.status(500).json({ error: 'Setup failed' });
+        }
+    });
+});
+
 // User Login
 app.post('/api/auth/login', async (req, res) => {
     const { email, password } = req.body;
@@ -74,9 +97,23 @@ app.post('/api/auth/login', async (req, res) => {
     });
 });
 
+// Middleware: Verify Admin
+const verifyAdmin = (req, res, next) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) return res.status(401).json({ error: 'No token provided' });
+    
+    const token = authHeader.split(' ')[1];
+    jwt.verify(token, JWT_SECRET, (err, decoded) => {
+        if (err) return res.status(401).json({ error: 'Invalid token' });
+        if (decoded.role !== 'admin') return res.status(403).json({ error: 'Forbidden' });
+        req.user = decoded;
+        next();
+    });
+};
+
 // ============= API Routes =============
 
-// Get all properties
+// Get all public properties
 app.get('/api/properties', (req, res) => {
     const { type, minPrice, maxPrice, location, bedrooms } = req.query;
     let sql = 'SELECT * FROM properties WHERE status = "active"';
@@ -171,8 +208,32 @@ app.get('/api/featured', (req, res) => {
     });
 });
 
-// Dashboard Statistics (for Admin)
-app.get('/api/dashboard-stats', (req, res) => {
+// Admin: Get all properties (including pending/drafts)
+app.get('/api/admin/properties', verifyAdmin, (req, res) => {
+    let sql = 'SELECT * FROM properties ORDER BY created_at DESC';
+    db.all(sql, [], (err, rows) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(rows);
+    });
+});
+
+// Admin: Manage properties (Approve/Delete)
+app.put('/api/admin/properties/:id/status', verifyAdmin, (req, res) => {
+    const { status } = req.body;
+    if (!['active', 'deleted'].includes(status)) {
+        return res.status(400).json({ error: 'Invalid status' });
+    }
+    
+    const sql = `UPDATE properties SET status = ? WHERE id = ?`;
+    db.run(sql, [status, req.params.id], function(err) {
+        if (err) return res.status(500).json({ error: err.message });
+        if (this.changes === 0) return res.status(404).json({ error: 'Property not found' });
+        res.json({ message: 'Property status updated' });
+    });
+});
+
+// Admin: Get Dashboard Stats
+app.get('/api/dashboard-stats', verifyAdmin, (req, res) => {
     const stats = {};
     
     // Total Properties & Total Value
