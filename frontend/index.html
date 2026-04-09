@@ -8,6 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/css/style.css">
+    <script>if(localStorage.getItem('theme')==='dark'){document.documentElement.classList.add('dark-theme');}</script>
 </head>
 
 <body class="bg-gray-100">
@@ -69,8 +70,15 @@
     </nav>
 
     <!-- Hero Section with Search -->
-    <section class="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-20">
-        <div class="max-w-7xl mx-auto px-4 text-center">
+    <section class="relative text-white py-20 overflow-hidden">
+        <!-- Video Background -->
+        <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover z-0">
+            <source src="/images/Website_logo_animated_202604092122.mp4" type="video/mp4">
+        </video>
+        <!-- Overlay to ensure text readability -->
+        <div class="absolute inset-0 bg-blue-900 bg-opacity-60 z-10"></div>
+
+        <div class="relative z-20 max-w-7xl mx-auto px-4 text-center">
             <h1 class="text-5xl font-bold mb-4">Find Your Dream Property in Sri Lanka</h1>
             <p class="text-xl mb-8">Buy, Sell, Rent - Lands, Houses, Apartments</p>
 
