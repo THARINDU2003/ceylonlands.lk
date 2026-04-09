@@ -8,6 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/css/style.css">
+    <script>if(localStorage.getItem('theme')==='dark'){document.documentElement.classList.add('dark-theme');}</script>
 </head>
 
 <body class="bg-gray-100">
@@ -55,14 +56,10 @@
                     <a href="/dashboard.html?action=post"
                         class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 shadow-md transition transform active:scale-95">Post Free Ad</a>
 
-                    <!-- Premium Dark Mode Lamp Toggle -->
-                    <div class="lamp-toggle-container group" title="Toggle Dark Mode">
-                        <div class="lamp-body">
-                            <div class="lamp-glow"></div>
-                            <div class="lamp-base"></div>
-                        </div>
-                        <div class="pull-string"></div>
-                    </div>
+                    <!-- Dark Mode Toggle Button -->
+                    <button class="dark-mode-toggle text-gray-500 hover:text-blue-600 transition text-2xl focus:outline-none ml-4" title="Toggle Dark Mode">
+                        <i class="fas fa-moon"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -143,6 +140,7 @@
         </div>
     </footer>
 
+    <script src="/js/theme.js"></script>
     <script src="/js/auth.js"></script>
     <script src="/js/main.js"></script>
     <script>

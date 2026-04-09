@@ -103,6 +103,7 @@
             box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
         }
     </style>
+    <script>if(localStorage.getItem('theme')==='dark'){document.documentElement.classList.add('dark-theme');}</script>
 </head>
 <body>
     <div class="form-container">
@@ -132,14 +133,10 @@
                     <a href="/index.html">Back to Home</a>
                     <a href="/pricing.html">View Ad Plans</a>
                     
-                    <!-- Premium Dark Mode Lamp Toggle -->
-                    <div class="lamp-toggle-container group ml-0" title="Toggle Dark Mode">
-                        <div class="lamp-body !w-6 !h-8">
-                            <div class="lamp-glow !w-12 !h-12"></div>
-                            <div class="lamp-base !w-8"></div>
-                        </div>
-                        <div class="pull-string !h-32"></div>
-                    </div>
+                    <!-- Dark Mode Toggle Button -->
+                    <button class="dark-mode-toggle text-gray-500 hover:text-blue-600 transition text-2xl focus:outline-none ml-4" title="Toggle Dark Mode">
+                        <i class="fas fa-moon"></i>
+                    </button>
                 </div>
             </header>
 

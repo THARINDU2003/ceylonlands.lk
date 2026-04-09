@@ -16,6 +16,7 @@
         .sticky-contact { position: sticky; top: 24px; }
         .amenity-badge { background: #f1f5f9; padding: 10px 16px; border-radius: 8px; display: flex; align-items: center; gap: 8px; font-weight: 500; }
     </style>
+    <script>if(localStorage.getItem('theme')==='dark'){document.documentElement.classList.add('dark-theme');}</script>
 </head>
 <body class="bg-gray-50">
     <!-- Navigation -->
@@ -58,14 +59,10 @@
                     </button>
                 </div>
 
-                <!-- Premium Dark Mode Lamp Toggle -->
-                <div class="lamp-toggle-container group" title="Toggle Dark Mode">
-                    <div class="lamp-body">
-                        <div class="lamp-glow"></div>
-                        <div class="lamp-base"></div>
-                    </div>
-                    <div class="pull-string"></div>
-                </div>
+                <!-- Dark Mode Toggle Button -->
+                <button class="dark-mode-toggle text-gray-500 hover:text-blue-600 transition text-2xl focus:outline-none ml-4" title="Toggle Dark Mode">
+                    <i class="fas fa-moon"></i>
+                </button>
             </div>
             <a href="/dashboard.html?action=post" class="bg-blue-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-blue-700 transition shadow-md transform active:scale-95">Post Property</a>
         </div>
