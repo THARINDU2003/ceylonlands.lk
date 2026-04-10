@@ -46,11 +46,11 @@ const auth = {
     /**
      * Register a new user
      */
-    async register(name, email, password) {
+    async register(name, email, password, account_type = 'personal', company_name = '') {
         const response = await fetch(`${API_BASE_URL}/auth/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, email, password })
+            body: JSON.stringify({ name, email, password, account_type, company_name })
         });
 
         const data = await response.json();

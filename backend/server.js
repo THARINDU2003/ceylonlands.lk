@@ -25,7 +25,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'fallback_secret';
 
 // User Registration
 app.post('/api/auth/register', async (req, res) => {
-    const { name, email, password } = req.body;
+    const { name, email, password, account_type, company_name } = req.body;
     
     if (!name || !email || !password) {
         return res.status(400).json({ error: 'All fields are required' });
@@ -33,9 +33,9 @@ app.post('/api/auth/register', async (req, res) => {
 
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
-        const sql = `INSERT INTO users (name, email, password) VALUES (?, ?, ?)`;
+        const sql = `INSERT INTO users (name, email, password, account_type, company_name) VALUES (?, ?, ?, ?, ?)`;
         
-        db.run(sql, [name, email, hashedPassword], function(err) {
+        db.run(sql, [name, email, hashedPassword, account_type || 'personal', company_name || null], function(err) {
             if (err) {
                 if (err.message.includes('UNIQUE constraint failed')) {
                     return res.status(400).json({ error: 'Email already exists' });

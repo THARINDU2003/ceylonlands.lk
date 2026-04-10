@@ -52,6 +52,8 @@ db.serialize(() => {
             email TEXT UNIQUE NOT NULL,
             password TEXT NOT NULL,
             role TEXT DEFAULT 'user',
+            account_type TEXT DEFAULT 'personal',
+            company_name TEXT,
             created_at DATETIME DEFAULT (datetime('now'))
         )
     `);
