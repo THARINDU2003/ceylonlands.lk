@@ -1,5 +1,5 @@
-const API_URL = 'http://localhost:5000/api';
-const UPLOADS_URL = 'http://localhost:5000/uploads/';
+const API_URL = '/api';
+const UPLOADS_URL = '/uploads/';
 
 // Helper to resolve property images
 function resolveImagePath(path, size = '500') {
