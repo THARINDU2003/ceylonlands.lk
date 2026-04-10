@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: ceylonterrace
+    env: node
+    plan: free
+    branch: main
+    buildCommand: "cd backend && npm install"
+    startCommand: "cd backend && node server.js"
+    envVars:
+      - key: JWT_SECRET
+        generateValue: true
