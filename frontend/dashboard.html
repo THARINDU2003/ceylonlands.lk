@@ -162,17 +162,17 @@
                 <div class="mb-10">
                     <h2 class="text-xl font-bold text-gray-800 mb-6 border-b pb-2">Property Details</h2>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="input-group">
+                        <div class="input-group" id="bedroomsGroup">
                             <label for="propBedrooms">Bedrooms</label>
                             <input type="number" id="propBedrooms" name="bedrooms">
                         </div>
-                        <div class="input-group">
+                        <div class="input-group" id="bathroomsGroup">
                             <label for="propBathrooms">Bathrooms</label>
                             <input type="number" id="propBathrooms" name="bathrooms">
                         </div>
-                        <div class="input-group">
+                        <div class="input-group" id="landAreaGroup" style="display: none;">
                             <label for="propLandArea">Land Area (Perches)</label>
-                            <input type="number" id="propLandArea" name="land_area" required>
+                            <input type="number" id="propLandArea" name="land_area">
                         </div>
                     </div>
                     <div class="input-group">
@@ -258,6 +258,31 @@
                 document.getElementById('sellerNameInput').value = user.name || '';
                 document.getElementById('sellerEmail').value = user.email || '';
             }
+            
+            // Handle dynamic property fields
+            const propTypeSelect = document.getElementById('propType');
+            function togglePropertyFields() {
+                const propType = propTypeSelect.value;
+                const bedroomsGroup = document.getElementById('bedroomsGroup');
+                const bathroomsGroup = document.getElementById('bathroomsGroup');
+                const landAreaGroup = document.getElementById('landAreaGroup');
+                const landAreaInput = document.getElementById('propLandArea');
+
+                if (propType === 'Land') {
+                    bedroomsGroup.style.display = 'none';
+                    bathroomsGroup.style.display = 'none';
+                    landAreaGroup.style.display = 'block';
+                    landAreaInput.required = true;
+                } else if (propType === 'House' || propType === 'Apartment') {
+                    bedroomsGroup.style.display = 'block';
+                    bathroomsGroup.style.display = 'block';
+                    landAreaGroup.style.display = 'none';
+                    landAreaInput.required = false;
+                }
+            }
+            
+            propTypeSelect.addEventListener('change', togglePropertyFields);
+            togglePropertyFields(); // Initial check
         });
 
         async function postProperty(e) {
