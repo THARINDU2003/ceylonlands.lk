@@ -71,6 +71,14 @@ db.serialize(() => {
             });
         }
     });
+    // Seed Admin User
+    db.get("SELECT COUNT(*) as count FROM users WHERE role = 'admin'", async (err, row) => {
+        if (row && row.count === 0) {
+            const bcrypt = require('bcryptjs');
+            const hashed = await bcrypt.hash('admin123', 10);
+            db.run(`INSERT INTO users (name, email, password, role) VALUES ('Admin', 'admin@ceylonterrace.com', ?, 'admin')`, [hashed]);
+        }
+    });
 });
 
 module.exports = db;
