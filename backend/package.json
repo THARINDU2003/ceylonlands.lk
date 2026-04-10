@@ -1,7 +1,7 @@
 {
   "name": "ceylonlands-backend",
   "version": "1.0.0",
-  "description": "CeylonLands.lk Property Marketplace API",
+  "description": "CeylonTerrace.com Property Marketplace API",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

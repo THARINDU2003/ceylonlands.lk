@@ -1,5 +1,5 @@
 /**
- * auth.js - Authentication handler for CeylonLands.lk
+ * auth.js - Authentication handler for CeylonTerrace.com
  */
 
 const API_BASE_URL = 'http://localhost:5000/api';
