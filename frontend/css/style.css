@@ -322,4 +322,163 @@ body {
 
 .dark-theme .lamp-glow {
     opacity: 0;
+}
+
+/* ============================================================
+   DARK MODE — TAILWIND OVERRIDE LAYER
+   These rules fight hardcoded Tailwind utility classes so the
+   .dark-theme class actually works across all pages.
+   ============================================================ */
+
+/* Body & page backgrounds */
+body.dark-theme,
+.dark-theme.bg-gray-100 {
+    background-color: #0f172a !important;
+    color: #f8fafc !important;
+}
+
+/* Navigation */
+.dark-theme nav,
+.dark-theme nav.bg-white {
+    background-color: #1e293b !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4) !important;
+    border-bottom: 1px solid #334155 !important;
+}
+
+/* All white-background elements */
+.dark-theme .bg-white {
+    background-color: #1e293b !important;
+    color: #f8fafc !important;
+}
+
+/* Gray section backgrounds */
+.dark-theme .bg-gray-50,
+.dark-theme section.bg-gray-50 {
+    background-color: #0f172a !important;
+}
+.dark-theme .bg-gray-100 {
+    background-color: #0f172a !important;
+}
+
+/* Sidebar & panel backgrounds */
+.dark-theme .bg-gray-200 {
+    background-color: #334155 !important;
+}
+
+/* Text colors */
+.dark-theme .text-gray-900 { color: #f1f5f9 !important; }
+.dark-theme .text-gray-800 { color: #e2e8f0 !important; }
+.dark-theme .text-gray-700 { color: #cbd5e1 !important; }
+.dark-theme .text-gray-600 { color: #94a3b8 !important; }
+.dark-theme .text-gray-500 { color: #64748b !important; }
+.dark-theme .text-gray-400 { color: #475569 !important; }
+
+/* Section that are hardcoded white */
+.dark-theme section.bg-white {
+    background-color: #1e293b !important;
+}
+
+/* "Why Choose Us" section */
+.dark-theme .text-gray-600 p,
+.dark-theme section.bg-white p {
+    color: #94a3b8 !important;
+}
+
+/* Border colors */
+.dark-theme .border-gray-200,
+.dark-theme .border-gray-100,
+.dark-theme .border-gray-300 {
+    border-color: #334155 !important;
+}
+
+/* Inputs, selects, textareas */
+.dark-theme input,
+.dark-theme select,
+.dark-theme textarea {
+    background-color: #0f172a !important;
+    color: #f8fafc !important;
+    border-color: #334155 !important;
+}
+.dark-theme input::placeholder { color: #64748b !important; }
+
+/* Filter/sidebar cards */
+.dark-theme .rounded-2xl.bg-white,
+.dark-theme .rounded-2xl.shadow-sm {
+    background-color: #1e293b !important;
+}
+
+/* Pricing cards */
+.dark-theme .pricing-card {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+}
+.dark-theme .card-header {
+    border-bottom-color: #334155 !important;
+}
+.dark-theme .price .amount { color: #f1f5f9 !important; }
+.dark-theme .feature-item {
+    color: #cbd5e1 !important;
+    border-bottom-color: #334155 !important;
+}
+.dark-theme .pricing-section {
+    background: linear-gradient(145deg, #0f172a 0%, #1e293b 100%) !important;
+}
+.dark-theme .ad-headline h2 {
+    background: linear-gradient(135deg, #60a5fa, #34d399) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+}
+.dark-theme .feature-badge {
+    background: #0f172a !important;
+    color: #34d399 !important;
+}
+
+/* Footer adjustments */
+.dark-theme footer.bg-gray-800 {
+    background-color: #020617 !important;
+}
+
+/* Search bar inside hero */
+.dark-theme .bg-white.rounded-lg {
+    background-color: #1e293b !important;
+}
+.dark-theme #searchBar {
+    border-color: #334155 !important;
+}
+.dark-theme #searchLocation {
+    color: #f8fafc !important;
+    background-color: transparent !important;
+}
+.dark-theme .border-r.border-gray-200 {
+    border-right-color: #334155 !important;
+}
+
+/* Nav links in dark mode */
+.dark-theme nav a.text-gray-700 {
+    color: #cbd5e1 !important;
+}
+.dark-theme nav a:hover {
+    color: #60a5fa !important;
+}
+
+/* Sign up button subtle dark adaptation */
+.dark-theme .bg-blue-50 {
+    background-color: rgba(59, 130, 246, 0.15) !important;
+}
+
+/* Pull string knob in dark */
+.dark-theme .pull-string::after {
+    background: #f8fafc !important;
+}
+
+/* Extra filters panel */
+.dark-theme #extraFilters {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+    color: #f8fafc !important;
+}
+.dark-theme #extraFilters label { color: #cbd5e1 !important; }
+.dark-theme #extraFilters .bg-gray-100 {
+    background-color: #0f172a !important;
+    color: #cbd5e1 !important;
 }
