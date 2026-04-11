@@ -43,6 +43,13 @@
                     <a href="#" id="postAdBtn"
                         class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 shadow-md transition transform active:scale-95">Post Free Ad</a>
                     
+                    <!-- Language Selector -->
+                    <select id="languageSelect" class="bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 font-bold border-2 border-gray-200 dark:border-gray-700 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block py-1.5 px-3 ml-4 cursor-pointer outline-none transition shadow-sm hover:border-blue-400">
+                        <option value="en">English</option>
+                        <option value="si">සිංහල</option>
+                        <option value="ta">தமிழ்</option>
+                    </select>
+
                     <!-- Dark Mode Toggle Button -->
                     <button class="dark-mode-toggle text-gray-500 hover:text-blue-600 transition text-2xl focus:outline-none ml-4" title="Toggle Dark Mode">
                         <i class="fas fa-moon"></i>
@@ -206,39 +213,111 @@
         </div>
     </section>
 
-    <!-- Popular Locations Section -->
-    <section class="py-16 bg-gray-50">
+    <!-- Explore Directory Section -->
+    <section class="py-16 bg-white border-t border-gray-100 mt-8">
         <div class="max-w-7xl mx-auto px-4">
-            <h2 class="text-3xl font-bold mb-10 text-center">Popular Locations</h2>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                <a href="/properties.html?city=Colombo" class="group relative overflow-hidden rounded-2xl h-48 shadow-lg">
-                    <img src="https://images.unsplash.com/photo-1551038247-3d9af20df552?w=500" 
-                         class="w-full h-full object-cover transition duration-500 group-hover:scale-110" alt="Colombo">
-                    <div class="absolute inset-0 bg-black bg-opacity-30 group-hover:bg-opacity-20 transition flex items-center justify-center">
-                        <span class="text-white text-2xl font-bold">Colombo</span>
+            <div class="flex flex-col lg:flex-row border border-gray-200 bg-white">
+                
+                <!-- Left: Popular Areas -->
+                <div class="w-full lg:w-1/2 p-8 lg:p-12 border-b lg:border-b-0 lg:border-r border-gray-200">
+                    <div class="text-center mb-8">
+                        <h2 class="text-2xl font-black text-gray-900 mb-2 mt-4">Most Popular Areas for Property Listings</h2>
+                        <a href="/properties.html" class="text-yellow-500 font-bold hover:text-yellow-600 transition flex items-center justify-center gap-2">
+                            Explore All Properties <i class="fas fa-chevron-right text-sm"></i>
+                        </a>
                     </div>
-                </a>
-                <a href="/properties.html?city=Kandy" class="group relative overflow-hidden rounded-2xl h-48 shadow-lg">
-                    <img src="https://images.unsplash.com/photo-1582234032126-787f0b5d9472?w=500" 
-                         class="w-full h-full object-cover transition duration-500 group-hover:scale-110" alt="Kandy">
-                    <div class="absolute inset-0 bg-black bg-opacity-30 group-hover:bg-opacity-20 transition flex items-center justify-center">
-                        <span class="text-white text-2xl font-bold">Kandy</span>
+                    
+                    <div class="grid grid-cols-3 text-center border-t border-l border-gray-200">
+                        <a href="/properties.html?location=Colombo" class="border-r border-b border-gray-200 p-4 text-sm font-semibold hover:bg-gray-50 transition text-gray-800">Colombo</a>
+                        <a href="/properties.html?location=Gampaha" class="border-r border-b border-gray-200 p-4 text-sm font-semibold hover:bg-gray-50 transition text-gray-800">Gampaha</a>
+                        <a href="/properties.html?location=Kurunegala" class="border-r border-b border-gray-200 p-4 text-sm font-semibold hover:bg-gray-50 transition text-gray-800">Kurunegala</a>
+                        
+                        <a href="/properties.html?location=Matara" class="border-r border-b border-gray-200 p-4 text-sm font-semibold hover:bg-gray-50 transition text-gray-800">Matara</a>
+                        <a href="/properties.html?location=Negombo" class="border-r border-b border-gray-200 p-4 text-sm font-semibold hover:bg-gray-50 transition text-gray-800">Negombo</a>
+                        <a href="/properties.html?location=Ratnapura" class="border-r border-b border-gray-200 p-4 text-sm font-semibold hover:bg-gray-50 transition text-gray-800">Ratnapura</a>
+                        
+                        <a href="/properties.html?location=Anuradhapura" class="border-r border-b border-gray-200 p-4 text-sm font-semibold hover:bg-gray-50 transition text-gray-800">Anuradhapura</a>
+                        <a href="/properties.html?location=Maharagama" class="border-r border-b border-gray-200 p-4 text-sm font-semibold hover:bg-gray-50 transition text-gray-800">Maharagama</a>
+                        <a href="/properties.html?location=Panadura" class="border-r border-b border-gray-200 p-4 text-sm font-semibold hover:bg-gray-50 transition text-gray-800">Panadura</a>
+                        
+                        <a href="/properties.html?location=Matale" class="border-r border-b border-gray-200 p-4 text-sm font-semibold hover:bg-gray-50 transition text-gray-800">Matale</a>
+                        <a href="/properties.html?location=Gampola" class="border-r border-b border-gray-200 p-4 text-sm font-semibold hover:bg-gray-50 transition text-gray-800">Gampola</a>
+                        <a href="/properties.html?location=Ambalangoda" class="border-r border-b border-gray-200 p-4 text-sm font-semibold hover:bg-gray-50 transition text-gray-800">Ambalangoda</a>
+                        
+                        <a href="/properties.html?location=Hambanthota" class="border-r border-b border-gray-200 p-4 text-sm font-semibold hover:bg-gray-50 transition text-gray-800">Hambanthota</a>
+                        <a href="/properties.html?location=Minuwangoda" class="border-r border-b border-gray-200 p-4 text-sm font-semibold hover:bg-gray-50 transition text-gray-800">Minuwangoda</a>
+                        <a href="/properties.html?location=Badulla" class="border-r border-b border-gray-200 p-4 text-sm font-semibold hover:bg-gray-50 transition text-gray-800">Badulla</a>
+                        
+                        <a href="/properties.html?location=Kelaniya" class="border-r border-b border-gray-200 p-4 text-sm font-semibold hover:bg-gray-50 transition text-gray-800">Kelaniya</a>
+                        <a href="/properties.html?location=Puttalam" class="border-r border-b border-gray-200 p-4 text-sm font-semibold hover:bg-gray-50 transition text-gray-800">Puttalam</a>
+                        <a href="/properties.html?location=Moratuwa" class="border-r border-b border-gray-200 p-4 text-sm font-semibold hover:bg-gray-50 transition text-gray-800">Moratuwa</a>
                     </div>
-                </a>
-                <a href="/properties.html?city=Galle" class="group relative overflow-hidden rounded-2xl h-48 shadow-lg">
-                    <img src="https://images.unsplash.com/photo-1589139535455-7d4e32688b14?w=500" 
-                         class="w-full h-full object-cover transition duration-500 group-hover:scale-110" alt="Galle">
-                    <div class="absolute inset-0 bg-black bg-opacity-30 group-hover:bg-opacity-20 transition flex items-center justify-center">
-                        <span class="text-white text-2xl font-bold">Galle</span>
+                </div>
+                
+                <!-- Right: Categories Matrix -->
+                <div class="w-full lg:w-1/2 flex flex-col pt-8 lg:pt-12">
+                    <div class="text-center mb-8 px-8">
+                        <h2 class="text-2xl font-black text-gray-900 mb-2 mt-4">Find the Perfect property to Rent or Purchase</h2>
+                        <a href="/properties.html" class="text-yellow-500 font-bold hover:text-yellow-600 transition flex items-center justify-center gap-2">
+                            Explore All Properties <i class="fas fa-chevron-right text-sm"></i>
+                        </a>
                     </div>
-                </a>
-                <a href="/properties.html?city=Negombo" class="group relative overflow-hidden rounded-2xl h-48 shadow-lg">
-                    <img src="https://images.unsplash.com/photo-1551038247-3d9af20df552?w=500" 
-                         class="w-full h-full object-cover transition duration-500 group-hover:scale-110" alt="Negombo">
-                    <div class="absolute inset-0 bg-black bg-opacity-30 group-hover:bg-opacity-20 transition flex items-center justify-center">
-                        <span class="text-white text-2xl font-bold">Negombo</span>
+                    
+                    <div class="flex-grow bg-gradient-to-b from-purple-800 to-purple-600 p-6 lg:p-12 pb-16 lg:pb-16 flex flex-col sm:flex-row gap-6">
+                        
+                        <!-- For Sale Block -->
+                        <div class="w-full sm:w-1/2 border border-white/20 rounded-sm">
+                            <div class="text-center text-white font-bold tracking-widest py-4 border-b border-white/20">
+                                FOR SALE
+                            </div>
+                            <div class="grid grid-cols-2 bg-white h-full">
+                                <a href="/properties.html?offer=Sale&type=House" class="flex flex-col items-center justify-center p-6 border-r border-b border-gray-200 hover:bg-purple-50 transition group">
+                                    <i class="fas fa-home text-3xl mb-3 text-gray-700 group-hover:text-purple-700 transition-colors"></i>
+                                    <span class="text-sm font-bold text-gray-800 group-hover:text-purple-700">House</span>
+                                </a>
+                                <a href="/properties.html?offer=Sale&type=Land" class="flex flex-col items-center justify-center p-6 border-b border-gray-200 hover:bg-purple-50 transition group">
+                                    <i class="fas fa-map text-3xl mb-3 text-gray-700 group-hover:text-purple-700 transition-colors"></i>
+                                    <span class="text-sm font-bold text-gray-800 group-hover:text-purple-700">Lands</span>
+                                </a>
+                                <a href="/properties.html?offer=Sale&type=Apartment" class="flex flex-col items-center justify-center p-6 border-r border-gray-200 hover:bg-purple-50 transition group">
+                                    <i class="far fa-building text-3xl mb-3 text-gray-700 group-hover:text-purple-700 transition-colors"></i>
+                                    <span class="text-sm font-bold text-gray-800 group-hover:text-purple-700">Apartments</span>
+                                </a>
+                                <a href="/properties.html?offer=Sale&type=Commercial" class="flex flex-col items-center justify-center p-6 hover:bg-purple-50 transition group">
+                                    <i class="fas fa-store text-3xl mb-3 text-gray-700 group-hover:text-purple-700 transition-colors"></i>
+                                    <span class="text-sm font-bold text-gray-800 group-hover:text-purple-700">Commercial</span>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <!-- For Rent Block -->
+                        <div class="w-full sm:w-1/2 border border-white/20 rounded-sm">
+                            <div class="text-center text-white font-bold tracking-widest py-4 border-b border-white/20">
+                                FOR RENT
+                            </div>
+                            <div class="grid grid-cols-2 bg-white h-full">
+                                <a href="/properties.html?offer=Rent&type=House" class="flex flex-col items-center justify-center p-6 border-r border-b border-gray-200 hover:bg-purple-50 transition group">
+                                    <i class="fas fa-home text-3xl mb-3 text-gray-700 group-hover:text-purple-700 transition-colors"></i>
+                                    <span class="text-sm font-bold text-gray-800 group-hover:text-purple-700">House</span>
+                                </a>
+                                <a href="/properties.html?offer=Rent&type=Land" class="flex flex-col items-center justify-center p-6 border-b border-gray-200 hover:bg-purple-50 transition group">
+                                    <i class="fas fa-map text-3xl mb-3 text-gray-700 group-hover:text-purple-700 transition-colors"></i>
+                                    <span class="text-sm font-bold text-gray-800 group-hover:text-purple-700">Lands</span>
+                                </a>
+                                <a href="/properties.html?offer=Rent&type=Apartment" class="flex flex-col items-center justify-center p-6 border-r border-gray-200 hover:bg-purple-50 transition group">
+                                    <i class="far fa-building text-3xl mb-3 text-gray-700 group-hover:text-purple-700 transition-colors"></i>
+                                    <span class="text-sm font-bold text-gray-800 group-hover:text-purple-700">Apartments</span>
+                                </a>
+                                <a href="/properties.html?offer=Rent&type=Commercial" class="flex flex-col items-center justify-center p-6 hover:bg-purple-50 transition group">
+                                    <i class="fas fa-store text-3xl mb-3 text-gray-700 group-hover:text-purple-700 transition-colors"></i>
+                                    <span class="text-sm font-bold text-gray-800 group-hover:text-purple-700">Commercial</span>
+                                </a>
+                            </div>
+                        </div>
+                        
                     </div>
-                </a>
+                </div>
+                
             </div>
         </div>
     </section>
@@ -262,7 +341,7 @@
             <div class="flex justify-center items-center mb-6">
                 <video src="/images/Logo_name_animated_202604111211.mp4" autoplay loop muted playsinline class="h-16 mx-auto mb-6 rounded-lg pointer-events-none"></video>
             </div>
-            <p class="text-gray-400">&copy; 2024 CeylonTerrace.com - Sri Lanka's Leading Property Marketplace</p>
+            <p class="text-gray-400">&copy; 2026 CeylonTerrace.com - Sri Lanka's Leading Property Marketplace</p>
         </div>
     </footer>
 

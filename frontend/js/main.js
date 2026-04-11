@@ -30,35 +30,52 @@ async function loadProperties(filters = {}) {
             return;
         }
 
+        const countSpan = document.getElementById('propertyCount');
+        if (countSpan) countSpan.innerText = properties.length.toLocaleString();
+
         grid.innerHTML = properties.map(prop => {
             let imagesArray = [];
             try { imagesArray = JSON.parse(prop.images || '[]'); } catch(e){}
             const firstImage = resolveImagePath(imagesArray[0]);
-            const imageHtml = firstImage ? `<img src="${firstImage}" alt="${prop.title}" loading="lazy">` : `<div class="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400"><i class="fas fa-home fa-3x"></i></div>`;
+            const imageHtml = firstImage ? `<img src="${firstImage}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105" alt="${prop.title}" loading="lazy">` : `<div class="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400"><i class="fas fa-image fa-3x"></i></div>`;
             
             return `
-            <div class="property-card" onclick="window.location.href='/property-detail.html?id=${prop.id}'">
-                <div class="card-image">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col md:flex-row overflow-hidden hover:shadow-lg transition-shadow cursor-pointer mb-6" onclick="window.location.href='/property-detail.html?id=${prop.id}'">
+                <!-- Left Image Area -->
+                <div class="w-full md:w-2/5 relative h-64 md:h-auto overflow-hidden">
                     ${imageHtml}
-                    <span class="sale-badge">For ${prop.offer_type || 'Sale'}</span>
-                    <div class="wishlist-btn" onclick="event.stopPropagation(); toggleWishlist(${prop.id})">
-                        <i class="far fa-heart"></i>
-                    </div>
+                    <span class="absolute top-4 left-4 bg-purple-700 text-white text-xs font-black uppercase tracking-wider px-3 py-1.5 rounded shadow">For ${prop.offer_type || 'Sale'}</span>
+                    <button class="absolute top-4 right-4 bg-white/90 p-2 rounded shadow hover:text-red-500 transition" onclick="event.stopPropagation(); toggleWishlist(${prop.id})">
+                        <i class="far fa-bookmark text-lg"></i>
+                    </button>
                 </div>
-                <div class="card-content">
-                    <h3 class="property-title truncate">${prop.title}</h3>
-                    <div class="property-location">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <span>${prop.city}, ${prop.district}</span>
-                    </div>
-                    <div class="divider"></div>
-                    <div class="price-section">
-                        <div class="price">
-                            LKR ${prop.price.toLocaleString()}
+                <!-- Right Content Area -->
+                <div class="w-full md:w-3/5 flex flex-col pt-0 bg-purple-50">
+                    <div class="p-6 flex-grow flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-2xl font-black text-gray-900 mb-3 hover:text-purple-700 transition-colors">${prop.title}</h3>
+                            <div class="flex items-center text-gray-600 text-sm font-semibold mb-6">
+                                <span><i class="far fa-calendar-alt mr-2 text-purple-600"></i>${new Date(prop.created_at || Date.now()).toISOString().split('T')[0]}</span>
+                                <span class="mx-3 text-gray-300">|</span>
+                                <span><i class="fas fa-map-marker-alt text-purple-600 mr-2"></i>${prop.city}, ${prop.district}</span>
+                            </div>
+                            <div class="flex items-center gap-3 text-sm text-gray-700 font-bold mb-6">
+                                <span class="bg-white border border-purple-100 text-purple-900 px-4 py-1.5 rounded-lg shadow-sm">${prop.property_type || 'Land'}</span>
+                                <span class="bg-white border border-purple-100 text-purple-900 px-4 py-1.5 rounded-lg shadow-sm">${prop.land_area || '0'} ${prop.property_type === 'House' ? 'Sqft' : 'Perches'}</span>
+                            </div>
                         </div>
-                        <button class="view-btn">
-                            View Details &rarr;
-                        </button>
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-end mt-4">
+                            <div class="mb-4 md:mb-0">
+                                <div class="text-sm font-bold text-gray-500 mb-1">Asking Price</div>
+                                <div class="text-3xl font-black text-purple-800">Rs: ${prop.price.toLocaleString()}</div>
+                            </div>
+                            <button class="bg-purple-800 text-white px-8 py-3 rounded-lg font-bold hover:bg-purple-900 transition shadow-lg w-full md:w-auto">FIND OUT MORE</button>
+                        </div>
+                    </div>
+                    <!-- Bottom Loan Banner -->
+                    <div class="bg-yellow-400 px-6 py-3 flex justify-between items-center text-sm font-black text-yellow-900 hover:bg-yellow-500 transition border-t-4 border-yellow-500">
+                        <span>Best Loan Rental: <span class="text-black ml-1 text-base">Rs: ${Math.round(prop.price * 0.012).toLocaleString()}</span></span>
+                        <span class="flex items-center gap-2">REQUEST FINANCIAL AID <i class="fas fa-chevron-right"></i></span>
                     </div>
                 </div>
             </div>

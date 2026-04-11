@@ -43,6 +43,13 @@
                     <a href="/dashboard.html?action=post"
                         class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 shadow-md transition transform active:scale-95">Post Free Ad</a>
 
+                    <!-- Language Selector -->
+                    <select id="languageSelect" class="bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 font-bold border-2 border-gray-200 dark:border-gray-700 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block py-1.5 px-3 ml-4 cursor-pointer outline-none transition shadow-sm hover:border-blue-400">
+                        <option value="en">English</option>
+                        <option value="si">සිංහල</option>
+                        <option value="ta">தமிழ்</option>
+                    </select>
+
                     <!-- Dark Mode Toggle Button -->
                     <button class="dark-mode-toggle text-gray-500 hover:text-blue-600 transition text-2xl focus:outline-none ml-4" title="Toggle Dark Mode">
                         <i class="fas fa-moon"></i>
@@ -102,9 +109,20 @@
                 </div>
             </div>
 
-            <!-- Properties Grid -->
+            <!-- Properties List -->
             <div class="w-full md:w-3/4">
-                <div id="propertiesGrid" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="flex justify-between items-center mb-6 bg-white p-4 rounded-xl shadow-sm">
+                    <h2 class="text-xl font-bold text-gray-800"><span id="propertyCount">Many</span> Properties for sale</h2>
+                    <div class="flex items-center gap-2">
+                        <span class="text-sm font-bold text-gray-500 uppercase">Sort by</span>
+                        <select class="border-b-2 border-gray-300 font-bold text-gray-700 bg-transparent focus:outline-none pb-1 cursor-pointer">
+                            <option>Latest</option>
+                            <option>Price: Low to High</option>
+                            <option>Price: High to Low</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="propertiesGrid" class="flex flex-col space-y-2">
                     <!-- Properties will be loaded dynamically by main.js -->
                     <div class="col-span-full py-20 text-center">
                         <div class="animate-pulse flex flex-col items-center">
@@ -123,7 +141,7 @@
             <div class="flex justify-center items-center mb-6">
                 <video src="/images/Logo_name_animated_202604111211.mp4" autoplay loop muted playsinline class="h-16 mx-auto mb-6 rounded-lg pointer-events-none"></video>
             </div>
-            <p>&copy; 2024 CeylonTerrace.com - Sri Lanka's Property Marketplace</p>
+            <p>&copy; 2026 CeylonTerrace.com - Sri Lanka's Property Marketplace</p>
         </div>
     </footer>
 
