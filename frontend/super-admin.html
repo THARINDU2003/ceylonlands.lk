@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Admin - CeylonTerrace</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .sidebar { height: 100vh; position: sticky; top: 0; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .nav-link.active { background-color: rgba(59, 130, 246, 0.1); border-left: 4px solid #3b82f6; color: #3b82f6; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside class="w-64 sidebar bg-white border-r border-gray-200">
+            <div class="p-6">
+                <a href="/" class="flex items-center gap-2 mb-8">
+                    <video src="/images/Logo_name_animated_202604111211.mp4" autoplay loop muted playsinline class="h-10 rounded shadow-sm"></video>
+                </a>
+                <nav class="space-y-2">
+                    <button onclick="showTab('dashboard')" class="nav-link w-full flex items-center gap-3 px-4 py-3 text-gray-600 font-bold hover:bg-gray-50 transition rounded-lg active">
+                        <i class="fas fa-chart-line"></i> Dashboard
+                    </button>
+                    <button onclick="showTab('properties')" class="nav-link w-full flex items-center gap-3 px-4 py-3 text-gray-600 font-bold hover:bg-gray-50 transition rounded-lg">
+                        <i class="fas fa-home"></i> Properties
+                    </button>
+                    <button onclick="showTab('users')" class="nav-link w-full flex items-center gap-3 px-4 py-3 text-gray-600 font-bold hover:bg-gray-50 transition rounded-lg">
+                        <i class="fas fa-users"></i> Users
+                    </button>
+                    <button onclick="showTab('staff')" class="nav-link w-full flex items-center gap-3 px-4 py-3 text-gray-600 font-bold hover:bg-gray-50 transition rounded-lg">
+                        <i class="fas fa-user-tie"></i> Staff Management
+                    </button>
+                    <button onclick="showTab('finance')" class="nav-link w-full flex items-center gap-3 px-4 py-3 text-gray-600 font-bold hover:bg-gray-50 transition rounded-lg">
+                        <i class="fas fa-wallet"></i> Finance & Balance
+                    </button>
+                    <button onclick="showTab('inquiries')" class="nav-link w-full flex items-center gap-3 px-4 py-3 text-gray-600 font-bold hover:bg-gray-50 transition rounded-lg">
+                        <i class="fas fa-envelope"></i> Inquiries
+                    </button>
+                    <div class="pt-8 border-t border-gray-100">
+                        <a href="/index.html" class="w-full flex items-center gap-3 px-4 py-3 text-gray-400 font-bold hover:text-blue-600 transition">
+                            <i class="fas fa-arrow-left"></i> View Site
+                        </a>
+                        <button onclick="window.auth.logout()" class="w-full flex items-center gap-3 px-4 py-3 text-red-400 font-bold hover:text-red-600 transition">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </div>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-8">
+            <header class="flex justify-between items-center mb-10">
+                <h1 id="pageTitle" class="text-3xl font-black text-gray-800">System Dashboard</h1>
+                <div class="flex items-center gap-4">
+                    <span class="bg-blue-100 text-blue-700 px-4 py-1.5 rounded-full text-sm font-black uppercase tracking-widest">Super Admin Access</span>
+                    <div id="adminProfile" class="h-10 w-10 bg-gray-200 rounded-full overflow-hidden border-2 border-white shadow-sm">
+                        <i class="fas fa-user-shield text-gray-400 text-xl m-2"></i>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Tab -->
+            <div id="dashboard" class="tab-content active space-y-8">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                        <div class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-2">Total Listings</div>
+                        <div id="statTotal" class="text-4xl font-black text-gray-800">0</div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                        <div class="text-blue-400 text-xs font-bold uppercase tracking-widest mb-2">Total Users</div>
+                        <div id="statUsers" class="text-4xl font-black text-gray-800">0</div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                        <div class="text-purple-400 text-xs font-bold uppercase tracking-widest mb-2">Live Sales</div>
+                        <div id="statSales" class="text-4xl font-black text-gray-800">0</div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                        <div class="text-green-400 text-xs font-bold uppercase tracking-widest mb-2">Inquiries</div>
+                        <div id="statInquiries" class="text-4xl font-black text-gray-800">0</div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+                    <h3 class="text-xl font-black text-gray-800 mb-6">Recent Platform Activity</h3>
+                    <div id="recentActivity" class="space-y-4">
+                        <p class="text-gray-400 italic">No recent activity found.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Properties Tab -->
+            <div id="properties" class="tab-content">
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <table class="w-full text-left">
+                        <thead class="bg-gray-50 border-b border-gray-100">
+                            <tr>
+                                <th class="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest">Property</th>
+                                <th class="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest">Owner</th>
+                                <th class="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest">Price</th>
+                                <th class="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest">Status</th>
+                                <th class="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="propertiesTable" class="divide-y divide-gray-50">
+                            <!-- Rows loaded via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Users Tab -->
+            <div id="users" class="tab-content">
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <table class="w-full text-left">
+                        <thead class="bg-gray-50 border-b border-gray-100">
+                            <tr>
+                                <th class="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest">User</th>
+                                <th class="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest">Email</th>
+                                <th class="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest">Role</th>
+                                <th class="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTable" class="divide-y divide-gray-50">
+                            <!-- Rows loaded via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Staff Management Tab -->
+            <div id="staff" class="tab-content">
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 mb-8">
+                    <h3 class="text-xl font-black text-gray-800 mb-6">Create Staff Account</h3>
+                    <form id="createStaffForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <input type="text" id="staffName" placeholder="Full Name" class="border-2 border-gray-100 rounded-xl p-3" required>
+                        <input type="email" id="staffEmail" placeholder="Email Address" class="border-2 border-gray-100 rounded-xl p-3" required>
+                        <input type="password" id="staffPassword" placeholder="Set Password" class="border-2 border-gray-100 rounded-xl p-3" required>
+                        <div class="flex flex-wrap gap-4 p-4 bg-gray-50 rounded-xl col-span-full">
+                            <span class="w-full text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Permissions:</span>
+                            <label class="flex items-center gap-2 font-bold text-sm">
+                                <input type="checkbox" name="perm" value="data_entry"> Data Entry
+                            </label>
+                            <label class="flex items-center gap-2 font-bold text-sm">
+                                <input type="checkbox" name="perm" value="edit_all"> Modification
+                            </label>
+                            <label class="flex items-center gap-2 font-bold text-sm">
+                                <input type="checkbox" name="perm" value="user_mgmt"> Customer Modification
+                            </label>
+                            <label class="flex items-center gap-2 font-bold text-sm">
+                                <input type="checkbox" name="perm" value="media_mgmt"> Photos & Media Edit
+                            </label>
+                        </div>
+                        <button type="submit" class="bg-blue-600 text-white px-8 py-4 rounded-xl font-black hover:bg-blue-700 transition w-fit">Create Staff Login</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Finance Tab -->
+            <div id="finance" class="tab-content">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="lg:col-span-1 space-y-8">
+                        <div class="bg-gradient-to-br from-blue-600 to-blue-800 p-8 rounded-3xl shadow-xl text-white">
+                            <div class="text-blue-200 text-xs font-black uppercase tracking-widest mb-2">System Total Balance</div>
+                            <div id="financeBalance" class="text-4xl font-black mb-6">LKR 0.00</div>
+                            <button id="transferBtn" onclick="openTransferModal()" class="hidden w-full bg-white text-blue-600 py-4 rounded-2xl font-black hover:bg-blue-50 transition shadow-lg">Request Bank Transfer</button>
+                            <p id="transferRestricted" class="text-xs text-blue-200 mt-4 italic">Only Super Admin can initiate transfers.</p>
+                        </div>
+                        
+                        <div id="companyBankDetailsSection" class="hidden bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                            <h3 class="text-lg font-black text-gray-800 mb-4 border-b pb-2">Public Company Bank Details</h3>
+                            <p class="text-xs text-gray-400 mb-4">This is the account displayed to customers for ad payments.</p>
+                            <form id="publicBankForm" class="space-y-4">
+                                <input type="text" id="pbBank" placeholder="Bank Name" class="w-full text-sm border-2 border-gray-100 rounded-lg p-2" required>
+                                <input type="text" id="pbName" placeholder="Account Name" class="w-full text-sm border-2 border-gray-100 rounded-lg p-2" required>
+                                <input type="text" id="pbAccount" placeholder="Account Number" class="w-full text-sm border-2 border-gray-100 rounded-lg p-2" required>
+                                <input type="text" id="pbBranch" placeholder="Branch" class="w-full text-sm border-2 border-gray-100 rounded-lg p-2" required>
+                                <button type="submit" class="w-full bg-green-500 text-white text-sm font-bold py-3 rounded-lg hover:bg-green-600 transition">Update Bank Details</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-2">
+                        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                            <h3 class="p-6 font-black text-gray-800 border-b border-gray-50">Recent Transfers</h3>
+                            <table class="w-full text-left">
+                                <thead class="bg-gray-50 border-b border-gray-100">
+                                    <tr>
+                                        <th class="px-6 py-4 text-xs font-black text-gray-400 capitalize tracking-widest">Amount</th>
+                                        <th class="px-6 py-4 text-xs font-black text-gray-400 capitalize tracking-widest">Status</th>
+                                        <th class="px-6 py-4 text-xs font-black text-gray-400 capitalize tracking-widest">Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="transfersTable" class="divide-y divide-gray-50 text-sm">
+                                    <tr><td colspan="3" class="p-10 text-center text-gray-400 italic">No transfers yet.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Inquiries Tab -->
+            <div id="inquiries" class="tab-content">
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <table class="w-full text-left">
+                        <thead class="bg-gray-50 border-b border-gray-100">
+                            <tr>
+                                <th class="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest">Inquiry</th>
+                                <th class="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest">Contact</th>
+                                <th class="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest">Property</th>
+                                <th class="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inquiriesTable" class="divide-y divide-gray-50">
+                            <!-- Rows loaded via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Bank Transfer Modal -->
+    <div id="transferModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl w-full max-w-md p-10">
+            <h2 class="text-3xl font-black mb-6 text-gray-900 border-b pb-4">Bank Transfer</h2>
+            <form id="transferForm" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Transfer Amount (LKR)</label>
+                    <input type="number" id="transferAmount" class="w-full border-2 border-gray-100 rounded-xl p-3" required>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="col-span-full">
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Transfer Type</label>
+                        <select id="transferType" class="w-full border-2 border-gray-100 rounded-xl p-3" onchange="toggleTransferFields()">
+                            <option value="bank">Bank Account</option>
+                            <option value="card">Payment Card (Visa/Master)</option>
+                        </select>
+                    </div>
+                    <div id="bankFields" class="col-span-full space-y-4">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Bank Details (Account No, Name, Bank)</label>
+                            <textarea id="transferBankDetails" class="w-full border-2 border-gray-100 rounded-xl p-3" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div id="cardFields" class="col-span-full space-y-4 hidden">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Card Holder Name</label>
+                            <input type="text" id="transferCardName" class="w-full border-2 border-gray-100 rounded-xl p-3">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Card Number</label>
+                            <input type="text" id="transferCardNumber" class="w-full border-2 border-gray-100 rounded-xl p-3" placeholder="0000 0000 0000 0000">
+                        </div>
+                    </div>
+                </div>
+                <div class="flex gap-4 pt-4">
+                    <button type="submit" class="bg-blue-600 text-white flex-1 py-4 rounded-xl font-black hover:bg-blue-700 transition">Confirm Transfer</button>
+                    <button type="button" onclick="closeTransferModal()" class="text-gray-400 font-bold px-4 hover:text-gray-600">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Property Modal -->
+    <div id="editModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl w-full max-w-4xl max-h-[90vh] overflow-y-auto p-10">
+            <h2 id="modalTitle" class="text-3xl font-black mb-6">Edit Property</h2>
+            <form id="editPropertyForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <input type="hidden" id="editPropId">
+                <div class="col-span-full">
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Title</label>
+                    <input type="text" id="editTitle" class="w-full border-2 border-gray-100 rounded-xl p-3" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Price (LKR)</label>
+                    <input type="number" id="editPrice" class="w-full border-2 border-gray-100 rounded-xl p-3" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Status</label>
+                    <select id="editStatus" class="w-full border-2 border-gray-100 rounded-xl p-3">
+                        <option value="pending">Pending</option>
+                        <option value="active">Active</option>
+                        <option value="deleted">Deleted</option>
+                    </select>
+                </div>
+                <div class="col-span-full">
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Description</label>
+                    <textarea id="editDescription" class="w-full border-2 border-gray-100 rounded-xl p-3" rows="4"></textarea>
+                </div>
+                <div class="col-span-full flex gap-4 mt-6">
+                    <button type="submit" class="bg-blue-600 text-white px-10 py-4 rounded-2xl font-black shadow-lg hover:bg-blue-700 transition">Save Changes</button>
+                    <button type="button" onclick="closeModal()" class="text-gray-500 font-bold px-6 py-4">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/js/auth.js"></script>
+    <script src="/js/super-admin.js"></script>
+</body>
+</html>

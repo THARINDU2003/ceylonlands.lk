@@ -21,7 +21,7 @@
             <p class="text-gray-500">Join the best property marketplace in Sri Lanka</p>
         </div>
 
-        <form id="signupForm" class="space-y-4">
+        <form id="signupForm" class="space-y-4 ct-secure-form">
             
             <!-- Account Type Selection -->
             <div class="flex gap-4 mb-2">
@@ -138,6 +138,7 @@
 
     <script src="/js/theme.js"></script>
     <script src="/js/auth.js"></script>
+    <script src="/js/security.js"></script>
     <script>
         function toggleCompanyField() {
             const isCompany = document.querySelector('input[name="accountType"]:checked').value === 'company';

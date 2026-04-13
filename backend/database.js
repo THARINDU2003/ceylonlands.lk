@@ -54,9 +54,52 @@ db.serialize(() => {
             role TEXT DEFAULT 'user',
             account_type TEXT DEFAULT 'personal',
             company_name TEXT,
+            balance REAL DEFAULT 0,
+            permissions TEXT DEFAULT '[]', -- JSON array of strings: 'data_entry', 'edit_all', 'user_mgmt', 'media_mgmt'
             created_at DATETIME DEFAULT (datetime('now'))
         )
     `);
+
+    // Migrations to support existing live databases
+    db.run("ALTER TABLE users ADD COLUMN balance REAL DEFAULT 0", (err) => {});
+    db.run("ALTER TABLE users ADD COLUMN permissions TEXT DEFAULT '[]'", (err) => {});
+
+
+    // Transfers table
+    db.run(`
+        CREATE TABLE IF NOT EXISTS transfers (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER,
+            amount REAL NOT NULL,
+            bank_details TEXT,
+            status TEXT DEFAULT 'pending', -- 'pending', 'completed', 'failed'
+            created_at DATETIME DEFAULT (datetime('now')),
+            FOREIGN KEY (user_id) REFERENCES users(id)
+        )
+    `);
+
+    // System Settings table for dynamic configurations (e.g., Bank Details)
+    db.run(`
+        CREATE TABLE IF NOT EXISTS settings (
+            key TEXT PRIMARY KEY,
+            value TEXT NOT NULL
+        )
+    `, (err) => {
+        if (!err) {
+            // Seed default bank details if they don't exist
+            db.get("SELECT COUNT(*) as count FROM settings WHERE key='bank_details'", (err, row) => {
+                if (row && row.count === 0) {
+                    const defaultBank = JSON.stringify({
+                        bank: "Commercial Bank",
+                        name: "CeylonTerrace",
+                        account: "1234 5678 9012",
+                        branch: "Colombo 01"
+                    });
+                    db.run("INSERT INTO settings (key, value) VALUES ('bank_details', ?)", [defaultBank]);
+                }
+            });
+        }
+    });
 
     // Sample data (for testing)
     db.get("SELECT COUNT(*) as count FROM properties", (err, row) => {

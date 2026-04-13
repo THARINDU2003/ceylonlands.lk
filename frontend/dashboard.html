@@ -134,7 +134,7 @@
                 </div>
             </header>
 
-            <form id="propertyForm" class="p-8" onsubmit="window.postProperty(event)">
+            <form id="propertyForm" class="p-8 ct-secure-form" onsubmit="window.postProperty(event)">
                 <!-- Property Information -->
                 <div class="mb-10">
                     <h2 class="text-xl font-bold text-gray-800 mb-6 border-b pb-2">Basic Information</h2>
@@ -184,7 +184,7 @@
                     </div>
                     <div class="input-group">
                         <label for="propDesc">Detailed Description</label>
-                        <textarea id="propDesc" name="description" rows="5" placeholder="Describe the property features, surroundings, etc."></textarea>
+                        <textarea id="propDesc" name="description" rows="5" placeholder="Describe the property features, surroundings, etc." data-maxlength="2000"></textarea>
                     </div>
                 </div>
 
@@ -250,6 +250,7 @@
     <!-- Auth Script -->
     <script src="/js/theme.js"></script>
     <script src="/js/auth.js"></script>
+    <script src="/js/security.js"></script>
     <script src="/js/main.js"></script>
     <script>
         // Check if user is logged in
