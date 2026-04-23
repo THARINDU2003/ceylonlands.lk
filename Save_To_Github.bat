@@ -1,6 +1,6 @@
 @echo off
 echo ===================================================
-echo     Saving CeylonTerrace to GitHub...
+echo     Saving CeylonTerrece to GitHub...
 echo ===================================================
 echo.
 

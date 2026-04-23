@@ -1,4 +1,4 @@
-// Super Admin Logic for CeylonTerrace
+// Super Admin Logic for CeylonTerrece
 
 const API_BAR = '/api/admin';
 

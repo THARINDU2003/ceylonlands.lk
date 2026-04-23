@@ -105,7 +105,7 @@ db.serialize(() => {
                 if (row && row.count === 0) {
                     const defaultBank = JSON.stringify({
                         bank: "Commercial Bank",
-                        name: "CeylonTerrace",
+                        name: "CeylonTerrece",
                         account: "1234 5678 9012",
                         branch: "Colombo 01"
                     });
@@ -148,7 +148,7 @@ db.serialize(() => {
         if (row && row.count === 0) {
             const bcrypt = require('bcryptjs');
             const hashed = await bcrypt.hash('admin123', 10);
-            db.run(`INSERT INTO users (name, email, password, role) VALUES ('Admin', 'admin@ceylonterrace.com', ?, 'admin')`, [hashed]);
+            db.run(`INSERT INTO users (name, email, password, role) VALUES ('Admin', 'admin@ceylonterrece.com', ?, 'admin')`, [hashed]);
         }
     });
 });

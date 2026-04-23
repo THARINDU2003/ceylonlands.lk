@@ -1,5 +1,5 @@
 /**
- * theme.js - Dark Mode Manager for CeylonTerrace.com
+ * theme.js - Dark Mode Manager for CeylonTerrece.com
  *
  * Applies .dark-theme to <body> (and removes it for light mode).
  * Flash prevention is handled by an inline <script> in each page's <head>

@@ -1,5 +1,5 @@
 /**
- * CeylonTerrace - Frontend Security Module
+ * CeylonTerrece - Frontend Security Module
  * Validates all user inputs before submission.
  * Blocks links/URLs in posts and messages.
  */

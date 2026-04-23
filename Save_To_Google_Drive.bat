@@ -1,18 +1,18 @@
 @echo off
 setlocal
 echo ===================================================
-echo     Saving CeylonTerrace to Google Drive...
+echo     Saving CeylonTerrece to Google Drive...
 echo ===================================================
 echo.
 
 :: Try to automatically find the Google Drive folder
 set "GDRIVE_PATH="
 if exist "G:\My Drive" (
-    set "GDRIVE_PATH=G:\My Drive\CeylonTerrace_Backup"
+    set "GDRIVE_PATH=G:\My Drive\CeylonTerrece_Backup"
 ) else if exist "H:\My Drive" (
-    set "GDRIVE_PATH=H:\My Drive\CeylonTerrace_Backup"
+    set "GDRIVE_PATH=H:\My Drive\CeylonTerrece_Backup"
 ) else if exist "%USERPROFILE%\Google Drive" (
-    set "GDRIVE_PATH=%USERPROFILE%\Google Drive\CeylonTerrace_Backup"
+    set "GDRIVE_PATH=%USERPROFILE%\Google Drive\CeylonTerrece_Backup"
 ) else (
     echo [!] Could not automatically detect Google Drive.
     echo Please type your Google Drive Backup folder path manually.
