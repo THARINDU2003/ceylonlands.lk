@@ -15,12 +15,13 @@ async function initSuperAdmin() {
     loadAllUsers();
     loadAllInquiries();
     loadFinanceData();
+    loadAllAgents();
     checkSuperAdminAccess();
 }
 
 function checkSuperAdminAccess() {
     const user = JSON.parse(localStorage.getItem('user'));
-    const isSuper = user.email === 'admin@ceylonterrace.com';
+    const isSuper = true; // Give full Super Admin privileges to all admins for now
     
     // Transfer access only for Super Admin
     if (isSuper) {
@@ -48,9 +49,13 @@ function checkSuperAdminAccess() {
         
         // Example: Only show Users if they have user_mgmt permission
         if (!user.permissions || !user.permissions.includes('user_mgmt')) {
-            const userTab = document.querySelector('button[onclick="showTab(\\\'users\\\')"]');
+            const userTab = document.querySelector('button[onclick="showTab(\'users\')"]');
             if (userTab) userTab.style.display = 'none';
         }
+
+        // Hide Agents for non-super admins
+        const agentTab = document.querySelector('button[onclick="showTab(\'agents\')"]');
+        if (agentTab) agentTab.style.display = 'none';
     }
 }
 
@@ -190,6 +195,97 @@ async function loadAllInquiries() {
     } catch (e) { }
 }
 
+// AGENTS MANAGEMENT
+async function loadAllAgents() {
+    const table = document.getElementById('agentsTable');
+    if(!table) return;
+    table.innerHTML = '<tr><td colspan="4" class="p-10 text-center text-gray-400 italic">Loading agents...</td></tr>';
+
+    try {
+        const token = localStorage.getItem('token');
+        const res = await fetch('/api/agents');
+        const agents = await res.json();
+
+        if (agents.length === 0) {
+            table.innerHTML = '<tr><td colspan="4" class="p-10 text-center text-gray-400 italic">No agents found.</td></tr>';
+            return;
+        }
+
+        table.innerHTML = agents.map(a => `
+            <tr class="hover:bg-gray-50 transition">
+                <td class="px-6 py-4 flex items-center gap-4">
+                    <img src="${a.photo || 'https://ui-avatars.com/api/?name=' + a.name}" class="w-10 h-10 rounded-full object-cover">
+                    <div class="font-bold text-gray-800">${a.name}</div>
+                </td>
+                <td class="px-6 py-4">
+                    <div class="text-sm font-bold text-gray-700">${a.phone}</div>
+                    <div class="text-xs text-gray-400">${a.email || 'No email'}</div>
+                </td>
+                <td class="px-6 py-4 text-xs font-black text-gray-400">${a.license_number || 'REG-PENDING'}</td>
+                <td class="px-6 py-4 text-right text-sm">
+                    <button onclick="deleteAgent(${a.id})" class="text-red-400 hover:text-red-600 transition p-2"><i class="fas fa-trash-alt"></i></button>
+                </td>
+            </tr>
+        `).join('');
+    } catch (e) { console.error(e); }
+}
+
+function openAgentModal() {
+    document.getElementById('agentModal').classList.remove('hidden');
+}
+
+function closeAgentModal() {
+    document.getElementById('agentModal').classList.add('hidden');
+}
+
+async function deleteAgent(id) {
+    if(!confirm("Remove this agent from the company?")) return;
+    const token = localStorage.getItem('token');
+    const res = await fetch(`/api/admin/agents/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if(res.ok) loadAllAgents();
+    else alert("Failed to delete agent.");
+}
+
+const addAgentForm = document.getElementById('addAgentForm');
+if(addAgentForm) {
+    addAgentForm.onsubmit = async (e) => {
+        e.preventDefault();
+        const token = localStorage.getItem('token');
+        
+        const agentData = {
+            name: document.getElementById('agentName').value,
+            email: document.getElementById('agentEmail').value,
+            phone: document.getElementById('agentPhone').value,
+            whatsapp: document.getElementById('agentWhatsapp').value,
+            photo: document.getElementById('agentPhoto').value,
+            license_number: document.getElementById('agentLicense').value
+        };
+
+        const res = await fetch('/api/admin/agents', {
+            method: 'POST',
+            headers: { 
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(agentData)
+        });
+
+        if(res.ok) {
+            alert("New agent added successfully!");
+            e.target.reset();
+            closeAgentModal();
+            loadAllAgents();
+        } else {
+            const err = await res.json();
+            alert(err.error || "Failed to add agent.");
+        }
+    };
+}
+
+
 // FINANCE & BALANCE
 async function loadFinanceData() {
     try {
@@ -310,8 +406,6 @@ document.getElementById('createStaffForm').onsubmit = async (e) => {
         const err = await res.json();
         alert(err.error || "Failed to create staff.");
     }
-};
-
 };
 
 // Public Bank Details Form Submit

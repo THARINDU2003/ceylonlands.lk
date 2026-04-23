@@ -64,7 +64,7 @@ function sanitizeText(text) {
 // ============= MIDDLEWARE =============
 app.use(cors({
     origin: process.env.NODE_ENV === 'production' 
-        ? ['https://ceylonterrace.com', 'https://www.ceylonterrace.com']
+        ? ['https://ceylonterrece.com', 'https://www.ceylonterrece.com']
         : '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
@@ -188,7 +188,7 @@ const verifyAdmin = (req, res, next) => {
 const checkPermission = (permission) => {
     return (req, res, next) => {
         // Super admin (main admin) has all permissions implicitly
-        if (req.user.email === 'admin@ceylonterrace.com') return next();
+        if (req.user.role === 'admin') return next();
         
         if (req.user.permissions.includes(permission)) {
             next();
@@ -483,7 +483,7 @@ app.delete('/api/admin/properties/:id', verifyAdmin, checkPermission('edit_all')
 // Admin: Create Staff Account
 app.post('/api/admin/staff', verifyAdmin, async (req, res) => {
     // Only the main super admin can create staff
-    if (req.user.email !== 'admin@ceylonterrace.com') {
+    if (req.user.role !== 'admin') {
         return res.status(403).json({ error: 'Only Super Admin can create staff accounts' });
     }
 
@@ -508,7 +508,7 @@ app.get('/api/admin/system-balance', verifyAdmin, (req, res) => {
 
 app.post('/api/admin/transfers', verifyAdmin, (req, res) => {
     // RESTRICTED: Only the main super admin can trigger bank transfers
-    if (req.user.email !== 'admin@ceylonterrace.com') {
+    if (req.user.role !== 'admin') {
         return res.status(403).json({ error: 'Restricted: Only Super Admin can process bank transfers' });
     }
 
@@ -536,7 +536,7 @@ app.get('/api/settings/bank', (req, res) => {
 });
 
 app.post('/api/admin/settings/bank', verifyAdmin, (req, res) => {
-    if (req.user.email !== 'admin@ceylonterrace.com') {
+    if (req.user.role !== 'admin') {
         return res.status(403).json({ error: 'Only Super Admin can update company bank details' });
     }
     const { bank, name, account, branch } = req.body;
@@ -546,6 +546,94 @@ app.post('/api/admin/settings/bank', verifyAdmin, (req, res) => {
         if (err) return res.status(500).json({ error: err.message });
         res.json({ message: 'Bank details updated successfully' });
     });
+});
+
+// ============= Real Estate Agents Routes =============
+
+// Get all agents (public)
+app.get('/api/agents', (req, res) => {
+    db.all('SELECT * FROM agents ORDER BY name ASC', [], (err, rows) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(rows);
+    });
+});
+
+// Admin: Add completely new real estate agent
+app.post('/api/admin/agents', verifyAdmin, (req, res) => {
+    if (req.user.role !== 'admin') {
+        return res.status(403).json({ error: 'Only Super Admin can manage agents' });
+    }
+
+    const { name, email, phone, whatsapp, photo, license_number } = req.body;
+    if (!name || !phone) {
+        return res.status(400).json({ error: 'Name and phone number are absolutely required' });
+    }
+    
+    // Security sanitization
+    const cleanName = sanitizeText(name);
+    
+    const sql = `INSERT INTO agents (name, email, phone, whatsapp, photo, license_number) VALUES (?, ?, ?, ?, ?, ?)`;
+    db.run(sql, [cleanName, email, phone, whatsapp, photo || '', license_number || ''], function(err) {
+        if (err) return res.status(500).json({ error: err.message });
+        res.status(201).json({ id: this.lastID, message: 'Agent created successfully!' });
+    });
+});
+
+// Admin: Delete a real estate agent
+app.delete('/api/admin/agents/:id', verifyAdmin, (req, res) => {
+    if (req.user.role !== 'admin') {
+        return res.status(403).json({ error: 'Only Super Admin can delete agents' });
+    }
+
+    const sql = 'DELETE FROM agents WHERE id = ?';
+    db.run(sql, [req.params.id], function(err) {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ message: 'Agent fired/deleted successfully!' });
+    });
+});
+
+// ============= AI Agent Route =============
+app.post('/api/ai/chat', async (req, res) => {
+    const { message } = req.body;
+    if (!message) return res.status(400).json({ error: 'Message required' });
+
+    try {
+        const apiKey = process.env.GEMINI_API_KEY;
+        if (!apiKey) return res.status(500).json({ error: 'AI API Key not configured' });
+
+        // Build the request for Google Gemini REST API
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+        
+        const systemPrompt = "You are Terra, the friendly AI real estate assistant for CeylonTerrece.com (Sri Lanka). Keep answers under 3 sentences, be polite, and guide them to use our search filters.";
+        
+        // Dynamic import to use node-fetch if global fetch is not available (Node < 18)
+        let fetchFn = global.fetch;
+        if (!fetchFn) {
+            const nodeFetch = await import('node-fetch');
+            fetchFn = nodeFetch.default;
+        }
+
+        const response = await fetchFn(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: `${systemPrompt}\nUser: ${message}` }] }]
+            })
+        });
+
+        const data = await response.json();
+        
+        if (!response.ok) {
+            console.error('Gemini API Error:', data);
+            return res.status(500).json({ error: 'AI is currently unavailable.' });
+        }
+
+        const aiText = data.candidates[0].content.parts[0].text;
+        res.json({ reply: aiText });
+    } catch (e) {
+        console.error('AI Route Error:', e);
+        res.status(500).json({ error: 'Failed to process AI request.' });
+    }
 });
 
 // Start server

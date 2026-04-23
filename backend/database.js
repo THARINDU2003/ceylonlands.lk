@@ -61,9 +61,23 @@ db.serialize(() => {
     `);
 
     // Migrations to support existing live databases
-    db.run("ALTER TABLE users ADD COLUMN balance REAL DEFAULT 0", (err) => {});
-    db.run("ALTER TABLE users ADD COLUMN permissions TEXT DEFAULT '[]'", (err) => {});
+    db.run("ALTER TABLE users ADD COLUMN balance REAL DEFAULT 0", () => {});
+    db.run("ALTER TABLE users ADD COLUMN permissions TEXT DEFAULT '[]'", () => {});
 
+
+    // Agents table
+    db.run(`
+        CREATE TABLE IF NOT EXISTS agents (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            email TEXT,
+            phone TEXT NOT NULL,
+            whatsapp TEXT,
+            photo TEXT,
+            license_number TEXT,
+            created_at DATETIME DEFAULT (datetime('now'))
+        )
+    `);
 
     // Transfers table
     db.run(`
@@ -116,6 +130,19 @@ db.serialize(() => {
             });
         }
     });
+    // Sample agents
+    db.get("SELECT COUNT(*) as count FROM agents", (err, row) => {
+        if (row && row.count === 0) {
+             const sampleAgents = [
+                ['Jane Doe', 'jane@ceylonterrece.com', '0771234567', '0771234567', 'https://ui-avatars.com/api/?name=Jane+Doe&background=2563eb&color=fff', 'LIC-001'],
+                ['Kamal Perera', 'kamal@ceylonterrece.com', '0719876543', '0719876543', 'https://ui-avatars.com/api/?name=Kamal+Perera&background=10b981&color=fff', 'LIC-002']
+            ];
+            sampleAgents.forEach(agent => {
+                db.run(`INSERT INTO agents (name, email, phone, whatsapp, photo, license_number) VALUES (?, ?, ?, ?, ?, ?)`, agent);
+            });
+        }
+    });
+
     // Seed Admin User
     db.get("SELECT COUNT(*) as count FROM users WHERE role = 'admin'", async (err, row) => {
         if (row && row.count === 0) {
