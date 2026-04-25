@@ -26,6 +26,7 @@ db.serialize(() => {
             images TEXT,
             views INTEGER DEFAULT 0,
             status TEXT DEFAULT 'pending',
+            expiry_date DATETIME,
             created_at DATETIME
         )
     `);
@@ -63,7 +64,7 @@ db.serialize(() => {
     // Migrations to support existing live databases
     db.run("ALTER TABLE users ADD COLUMN balance REAL DEFAULT 0", () => {});
     db.run("ALTER TABLE users ADD COLUMN permissions TEXT DEFAULT '[]'", () => {});
-
+    db.run("ALTER TABLE properties ADD COLUMN expiry_date DATETIME", () => {});
 
     // Agents table
     db.run(`

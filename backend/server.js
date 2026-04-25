@@ -69,7 +69,14 @@ app.use(cors({
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
-app.use(express.json({ limit: '2mb' }));
+app.use(express.json({ 
+    limit: '2mb',
+    verify: (req, res, buf) => {
+        if (req.originalUrl.startsWith('/api/paddle-webhook')) {
+            req.rawBody = buf.toString('utf8');
+        }
+    }
+}));
 app.use(express.urlencoded({ extended: true, limit: '2mb' }));
 
 // Serve static frontend files
@@ -357,6 +364,85 @@ app.put('/api/admin/properties/:id/status', verifyAdmin, (req, res) => {
         res.json({ message: 'Property status updated' });
     });
 });
+
+// ============= Paddle Webhook Route =============
+const crypto = require('crypto');
+
+app.post('/api/paddle-webhook', (req, res) => {
+    const signatureHeader = req.headers['paddle-signature'];
+    const secret = process.env.PADDLE_WEBHOOK_SECRET;
+
+    if (!signatureHeader || !secret || !req.rawBody) {
+        return res.status(400).send('Missing signature or secret');
+    }
+
+    // Parse the Paddle-Signature header (format: ts=...,h1=...)
+    const parts = signatureHeader.split(';');
+    let ts = '', h1 = '';
+    parts.forEach(part => {
+        const [key, value] = part.split('=');
+        if (key === 'ts') ts = value;
+        if (key === 'h1') h1 = value;
+    });
+
+    if (!ts || !h1) {
+        return res.status(400).send('Invalid signature format');
+    }
+
+    // Recreate the payload to hash
+    const signedPayload = `${ts}:${req.rawBody}`;
+    const generatedSignature = crypto.createHmac('sha256', secret).update(signedPayload).digest('hex');
+
+    if (generatedSignature !== h1) {
+        console.error('Paddle webhook signature verification failed.');
+        return res.status(401).send('Invalid signature');
+    }
+
+    // Signature verified! Process the event
+    let eventData;
+    try {
+        eventData = JSON.parse(req.rawBody);
+    } catch (e) {
+        return res.status(400).send('Invalid JSON body');
+    }
+
+    console.log(`Received Paddle Event: ${eventData.event_type}`);
+
+    // Handle completed transaction
+    if (eventData.event_type === 'transaction.completed') {
+        const transaction = eventData.data;
+        // The propertyId should be passed during checkout initialization in customData
+        const propertyId = transaction.custom_data ? transaction.custom_data.property_id : null;
+        
+        // Example: items[0].price.id gives the Paddle Price ID
+        const priceId = transaction.items && transaction.items.length > 0 ? transaction.items[0].price.id : null;
+
+        if (propertyId && priceId) {
+            console.log(`Payment successful for Price ID: ${priceId}, Property ID: ${propertyId}`);
+
+            // Calculate expiry date based on the plan (Price ID mapping)
+            let daysToAdd = 7; // default 7 days for Weekly Basic
+            
+            // Note: you can map the specific Price IDs from the frontend to durations here
+            if (priceId === 'pri_monthly_placeholder') daysToAdd = 30;
+            if (priceId === 'pri_yearly_placeholder') daysToAdd = 365;
+
+            // Date calculation in JS/SQLite
+            const sql = `UPDATE properties SET status = 'active', expiry_date = datetime('now', '+${daysToAdd} days') WHERE id = ?`;
+            db.run(sql, [propertyId], function(err) {
+                if (err) {
+                    console.error('Failed to update property status:', err.message);
+                } else {
+                    console.log(`Property ${propertyId} activated until ${daysToAdd} days from now.`);
+                }
+            });
+        }
+    }
+
+    // Return a 200 OK so Paddle knows we received it
+    res.status(200).send('Webhook processed successfully');
+});
+
 
 // Admin: Get Dashboard Stats
 app.get('/api/dashboard-stats', verifyAdmin, (req, res) => {

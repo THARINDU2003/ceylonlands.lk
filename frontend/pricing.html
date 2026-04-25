@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
+    <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
     <style>
         .pricing-section {
             background: linear-gradient(145deg, #eef5ff 0%, #dcfce7 100%);
@@ -370,7 +371,10 @@
     <script src="/js/theme.js"></script>
     <script src="/js/auth.js"></script>
     <script src="/js/main.js"></script>
+    <script src="/js/paddle.js"></script>
     <script>
+        let currentSelectedPlan = '';
+
         document.addEventListener('DOMContentLoaded', () => {
             const postBtn = document.getElementById('postAdBtn');
             if (postBtn) {
@@ -383,6 +387,7 @@
 
         // Payment Modal Logic
         function openPaymentModal(planName, price) {
+            currentSelectedPlan = planName;
             document.getElementById('modalPlanName').innerText = planName;
             document.getElementById('modalPrice').innerText = 'LKR ' + price;
             document.getElementById('paymentModal').classList.remove('hidden');
@@ -390,6 +395,11 @@
 
         function closePaymentModal() {
             document.getElementById('paymentModal').classList.add('hidden');
+        }
+
+        function triggerPaddleCheckout() {
+            closePaymentModal();
+            openPaddlePayment(currentSelectedPlan);
         }
     </script>
 
@@ -416,37 +426,12 @@
                     </div>
                 </div>
 
-                <form onsubmit="event.preventDefault(); alert('Payment successful! This is a test simulation.'); closePaymentModal();">
-                    <!-- Credit Card Section -->
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2">Cardholder Name</label>
-                        <input type="text" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="John Doe">
-                    </div>
-                    
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2">Card Number</label>
-                        <div class="relative">
-                            <input type="text" maxlength="19" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="0000 0000 0000 0000">
-                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                                <i class="fab fa-cc-visa text-blue-600 text-xl mr-1"></i>
-                                <i class="fab fa-cc-mastercard text-red-500 text-xl"></i>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="flex gap-4 mb-4">
-                        <div class="flex-1">
-                            <label class="block text-gray-700 text-sm font-bold mb-2">Expiry Date</label>
-                            <input type="text" maxlength="5" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="MM/YY">
-                        </div>
-                        <div class="flex-1">
-                            <label class="block text-gray-700 text-sm font-bold mb-2">CVV</label>
-                            <input type="password" maxlength="3" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="123">
-                        </div>
-                    </div>
+                <form onsubmit="event.preventDefault(); triggerPaddleCheckout();">
+                    <!-- Card Payment Section via Paddle -->
+                    <p class="text-sm text-gray-600 mb-4 text-center">Click below to securely pay using your Credit or Debit card via Paddle.</p>
 
                     <button type="submit" class="w-full bg-green-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-green-600 transition shadow-lg flex items-center justify-center gap-2 mb-4">
-                        <i class="fas fa-lock"></i> Pay via Card
+                        <i class="fas fa-lock"></i> Pay via Card (Paddle)
                     </button>
                     
                     <div class="relative flex py-2 items-center">
