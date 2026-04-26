@@ -29,19 +29,19 @@ const auth = {
      * Update the navigation UI based on login state
      */
     updateUI(isLoggedIn) {
-        const guestLinks = document.getElementById('navGuestLinks');
-        const userLinks = document.getElementById('navUserLinks');
-        const userNameElem = document.getElementById('navUserName');
+        const guestLinks = document.querySelectorAll('#navGuestLinks');
+        const userLinks = document.querySelectorAll('#navUserLinks');
+        const userNameElems = document.querySelectorAll('#navUserName');
 
         if (isLoggedIn) {
-            if (guestLinks) guestLinks.classList.add('hidden');
-            if (userLinks) userLinks.classList.remove('hidden');
-            if (userNameElem && this.user) {
-                userNameElem.innerText = this.user.name || 'Dashboard';
-            }
+            guestLinks.forEach(el => el.classList.add('hidden'));
+            userLinks.forEach(el => el.classList.remove('hidden'));
+            userNameElems.forEach(el => {
+                if (this.user) el.innerText = this.user.name || 'Dashboard';
+            });
         } else {
-            if (guestLinks) guestLinks.classList.remove('hidden');
-            if (userLinks) userLinks.classList.add('hidden');
+            guestLinks.forEach(el => el.classList.remove('hidden'));
+            userLinks.forEach(el => el.classList.add('hidden'));
         }
     },
 

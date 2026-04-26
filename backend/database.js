@@ -116,6 +116,30 @@ db.serialize(() => {
         }
     });
 
+    // Ad Plans table
+    db.run(`
+        CREATE TABLE IF NOT EXISTS ad_plans (
+            id TEXT PRIMARY KEY,
+            name TEXT NOT NULL,
+            price REAL NOT NULL,
+            duration_days INTEGER NOT NULL,
+            active INTEGER DEFAULT 1
+        )
+    `, (err) => {
+        if (!err) {
+            db.get("SELECT COUNT(*) as count FROM ad_plans", (err, row) => {
+                if (row && row.count === 0) {
+                    const stmt = db.prepare("INSERT INTO ad_plans (id, name, price, duration_days, active) VALUES (?, ?, ?, ?, ?)");
+                    stmt.run('free_trial', 'Free Trial', 0, 30, 1);
+                    stmt.run('weekly', 'Weekly Basic', 1500, 7, 1);
+                    stmt.run('monthly', 'Monthly Pro', 6000, 30, 1);
+                    stmt.run('yearly', 'Yearly Corporate', 48000, 365, 1);
+                    stmt.finalize();
+                }
+            });
+        }
+    });
+
     // Sample data (for testing)
     db.get("SELECT COUNT(*) as count FROM properties", (err, row) => {
         if (row.count === 0) {

@@ -15,33 +15,36 @@
     </style>
 </head>
 <body class="bg-gray-50">
-    <div class="flex">
+    <div class="flex relative">
         <!-- Sidebar -->
-        <aside class="w-64 sidebar bg-white border-r border-gray-200">
-            <div class="p-6">
+        <aside id="superAdminSidebar" class="w-64 sidebar bg-white border-r border-gray-200 fixed md:sticky z-50 h-screen overflow-y-auto transform -translate-x-full md:translate-x-0 transition-transform duration-300 shadow-2xl md:shadow-none">
+            <div class="p-6 relative">
+                <button class="md:hidden absolute top-6 right-6 text-gray-500 text-2xl" onclick="document.getElementById('superAdminSidebar').classList.add('-translate-x-full')">
+                    <i class="fas fa-times"></i>
+                </button>
                 <a href="/" class="flex items-center gap-2 mb-8">
                     <video src="/images/Logo_name_animated_202604111211.mp4" autoplay loop muted playsinline class="h-10 rounded shadow-sm"></video>
                 </a>
                 <nav class="space-y-2">
-                    <button onclick="showTab('dashboard')" class="nav-link w-full flex items-center gap-3 px-4 py-3 text-gray-600 font-bold hover:bg-gray-50 transition rounded-lg active">
+                    <button onclick="showTab('dashboard'); document.getElementById('superAdminSidebar').classList.add('-translate-x-full');" class="nav-link w-full flex items-center gap-3 px-4 py-3 text-gray-600 font-bold hover:bg-gray-50 transition rounded-lg active">
                         <i class="fas fa-chart-line"></i> Dashboard
                     </button>
-                    <button onclick="showTab('properties')" class="nav-link w-full flex items-center gap-3 px-4 py-3 text-gray-600 font-bold hover:bg-gray-50 transition rounded-lg">
+                    <button onclick="showTab('properties'); document.getElementById('superAdminSidebar').classList.add('-translate-x-full');" class="nav-link w-full flex items-center gap-3 px-4 py-3 text-gray-600 font-bold hover:bg-gray-50 transition rounded-lg">
                         <i class="fas fa-home"></i> Properties
                     </button>
-                    <button onclick="showTab('users')" class="nav-link w-full flex items-center gap-3 px-4 py-3 text-gray-600 font-bold hover:bg-gray-50 transition rounded-lg">
+                    <button onclick="showTab('users'); document.getElementById('superAdminSidebar').classList.add('-translate-x-full');" class="nav-link w-full flex items-center gap-3 px-4 py-3 text-gray-600 font-bold hover:bg-gray-50 transition rounded-lg">
                         <i class="fas fa-users"></i> Users
                     </button>
-                    <button onclick="showTab('staff')" class="nav-link w-full flex items-center gap-3 px-4 py-3 text-gray-600 font-bold hover:bg-gray-50 transition rounded-lg">
+                    <button onclick="showTab('staff'); document.getElementById('superAdminSidebar').classList.add('-translate-x-full');" class="nav-link w-full flex items-center gap-3 px-4 py-3 text-gray-600 font-bold hover:bg-gray-50 transition rounded-lg">
                         <i class="fas fa-user-tie"></i> Staff Management
                     </button>
-                    <button onclick="showTab('finance')" class="nav-link w-full flex items-center gap-3 px-4 py-3 text-gray-600 font-bold hover:bg-gray-50 transition rounded-lg">
+                    <button onclick="showTab('finance'); document.getElementById('superAdminSidebar').classList.add('-translate-x-full');" class="nav-link w-full flex items-center gap-3 px-4 py-3 text-gray-600 font-bold hover:bg-gray-50 transition rounded-lg">
                         <i class="fas fa-wallet"></i> Finance & Balance
                     </button>
-                    <button onclick="showTab('inquiries')" class="nav-link w-full flex items-center gap-3 px-4 py-3 text-gray-600 font-bold hover:bg-gray-50 transition rounded-lg">
+                    <button onclick="showTab('inquiries'); document.getElementById('superAdminSidebar').classList.add('-translate-x-full');" class="nav-link w-full flex items-center gap-3 px-4 py-3 text-gray-600 font-bold hover:bg-gray-50 transition rounded-lg">
                         <i class="fas fa-envelope"></i> Inquiries
                     </button>
-                    <button onclick="showTab('agents')" class="nav-link w-full flex items-center gap-3 px-4 py-3 text-gray-600 font-bold hover:bg-gray-50 transition rounded-lg">
+                    <button onclick="showTab('agents'); document.getElementById('superAdminSidebar').classList.add('-translate-x-full');" class="nav-link w-full flex items-center gap-3 px-4 py-3 text-gray-600 font-bold hover:bg-gray-50 transition rounded-lg">
                         <i class="fas fa-user-tie"></i> Agents
                     </button>
                     <div class="pt-8 border-t border-gray-100">
@@ -57,12 +60,17 @@
         </aside>
 
         <!-- Main Content -->
-        <main class="flex-1 p-8">
-            <header class="flex justify-between items-center mb-10">
-                <h1 id="pageTitle" class="text-3xl font-black text-gray-800">System Dashboard</h1>
+        <main class="flex-1 p-4 md:p-8 w-full">
+            <header class="flex justify-between items-center mb-10 flex-wrap gap-4">
                 <div class="flex items-center gap-4">
-                    <span class="bg-blue-100 text-blue-700 px-4 py-1.5 rounded-full text-sm font-black uppercase tracking-widest">Super Admin Access</span>
-                    <div id="adminProfile" class="h-10 w-10 bg-gray-200 rounded-full overflow-hidden border-2 border-white shadow-sm">
+                    <button class="md:hidden text-gray-600 text-2xl focus:outline-none" onclick="document.getElementById('superAdminSidebar').classList.remove('-translate-x-full')">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1 id="pageTitle" class="text-2xl md:text-3xl font-black text-gray-800">System Dashboard</h1>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span class="hidden md:inline-block bg-blue-100 text-blue-700 px-4 py-1.5 rounded-full text-sm font-black uppercase tracking-widest">Super Admin Access</span>
+                    <div id="adminProfile" class="h-10 w-10 bg-gray-200 rounded-full overflow-hidden border-2 border-white shadow-sm flex-shrink-0">
                         <i class="fas fa-user-shield text-gray-400 text-xl m-2"></i>
                     </div>
                 </div>

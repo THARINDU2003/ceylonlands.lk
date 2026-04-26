@@ -239,6 +239,21 @@
                     </div>
                 </div>
 
+                <!-- Ad Plan Selection -->
+                <div class="mb-10">
+                    <h2 class="text-xl font-bold text-gray-800 mb-6 border-b pb-2">Select Ad Plan</h2>
+                    <div class="input-group">
+                        <label for="adPlan">Choose your listing plan</label>
+                        <select id="adPlan" name="ad_plan" required>
+                            <option value="free_trial">1 Month Free Trial (LKR 0)</option>
+                            <option value="weekly">Weekly Basic (LKR 1,500)</option>
+                            <option value="monthly">Monthly Pro (LKR 6,000)</option>
+                            <option value="yearly">Yearly Corporate (LKR 48,000)</option>
+                        </select>
+                        <p class="text-sm text-gray-500 mt-2">Paid plans will require payment after submission.</p>
+                    </div>
+                </div>
+
                 <div class="flex flex-col md:flex-row gap-4">
                     <button type="submit" formnovalidate name="action" value="draft" onclick="window.submitAction = 'draft'" class="md:w-1/3 bg-gray-500 text-white p-4 rounded-xl font-bold hover:bg-gray-600 transition shadow-lg text-lg">Save as Draft</button>
                     <button type="submit" name="action" value="pending" onclick="window.submitAction = 'pending'" class="md:w-2/3 submit-btn">Publish Property Listing</button>

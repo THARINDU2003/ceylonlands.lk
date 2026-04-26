@@ -257,7 +257,7 @@ app.get('/api/properties/:id', (req, res) => {
 
 // Create new property (Seller)
 app.post('/api/properties', (req, res) => {
-    let { title, description, price, property_type, offer_type, bedrooms, bathrooms, land_area, address, city, district, seller_name, seller_phone, seller_email, images, status } = req.body;
+    let { title, description, price, property_type, offer_type, bedrooms, bathrooms, land_area, address, city, district, seller_name, seller_phone, seller_email, images, status, ad_plan } = req.body;
 
     // --- SECURITY: Strip HTML from all text fields ---
     title = sanitizeText(title);
@@ -278,19 +278,38 @@ app.post('/api/properties', (req, res) => {
         return res.status(400).json({ error: 'Invalid price value.' });
     }
 
-    // Use the provided status or default to 'pending'
-    const propStatus = status === 'draft' ? 'draft' : 'pending';
-
-    const sql = `INSERT INTO properties (title, description, price, property_type, offer_type, bedrooms, bathrooms, land_area, address, city, district, seller_name, seller_phone, seller_email, images, status, created_at) 
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))`;
+    // Handle ad plan logic
+    let propStatus = status === 'draft' ? 'draft' : 'pending';
+    let expiryDateSql = "NULL";
     
-    db.run(sql, [title, description, price, property_type, offer_type, bedrooms, bathrooms, land_area, address, city, district, seller_name, seller_phone, seller_email, images, propStatus], function(err) {
-        if (err) {
-            res.status(500).json({ error: err.message });
-            return;
-        }
-        res.json({ id: this.lastID, message: 'Property added successfully' });
-    });
+    // Check ad_plans if a free trial is selected
+    if (ad_plan === 'free_trial' && propStatus !== 'draft') {
+        db.get("SELECT * FROM ad_plans WHERE id = 'free_trial'", (err, plan) => {
+            if (err) return res.status(500).json({ error: 'Database error' });
+            if (!plan || !plan.active) {
+                return res.status(400).json({ error: 'Free trial is currently not available.' });
+            }
+            
+            propStatus = 'active';
+            expiryDateSql = `datetime('now', '+${plan.duration_days} days')`;
+            
+            insertProperty(propStatus, expiryDateSql);
+        });
+    } else {
+        insertProperty(propStatus, expiryDateSql);
+    }
+
+    function insertProperty(finalStatus, finalExpiry) {
+        const sql = `INSERT INTO properties (title, description, price, property_type, offer_type, bedrooms, bathrooms, land_area, address, city, district, seller_name, seller_phone, seller_email, images, status, expiry_date, created_at) 
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ${finalExpiry}, datetime('now'))`;
+        
+        db.run(sql, [title, description, price, property_type, offer_type, bedrooms, bathrooms, land_area, address, city, district, seller_name, seller_phone, seller_email, images, finalStatus], function(err) {
+            if (err) {
+                return res.status(500).json({ error: err.message });
+            }
+            res.json({ id: this.lastID, message: finalStatus === 'active' ? 'Property activated with Free Trial!' : 'Property added successfully' });
+        });
+    }
 });
 
 // Contact seller (send inquiry)
@@ -675,6 +694,54 @@ app.delete('/api/admin/agents/:id', verifyAdmin, (req, res) => {
     db.run(sql, [req.params.id], function(err) {
         if (err) return res.status(500).json({ error: err.message });
         res.json({ message: 'Agent fired/deleted successfully!' });
+    });
+});
+
+// ============= Ad Plans Routes =============
+
+// Get all ad plans (public)
+app.get('/api/ad-plans', (req, res) => {
+    db.all('SELECT * FROM ad_plans ORDER BY price ASC', [], (err, rows) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(rows);
+    });
+});
+
+// Admin: Update ad plan pricing and duration
+app.put('/api/admin/ad-plans/:id', verifyAdmin, (req, res) => {
+    if (req.user.role !== 'admin') {
+        return res.status(403).json({ error: 'Only Super Admin can manage ad plans' });
+    }
+
+    const { price, duration_days } = req.body;
+    if (price === undefined || duration_days === undefined) {
+        return res.status(400).json({ error: 'Price and duration are required' });
+    }
+
+    const sql = `UPDATE ad_plans SET price = ?, duration_days = ? WHERE id = ?`;
+    db.run(sql, [price, duration_days, req.params.id], function(err) {
+        if (err) return res.status(500).json({ error: err.message });
+        if (this.changes === 0) return res.status(404).json({ error: 'Ad plan not found' });
+        res.json({ message: 'Ad plan updated successfully!' });
+    });
+});
+
+// Admin: Toggle ad plan active status (e.g., Free plan)
+app.put('/api/admin/ad-plans/:id/toggle', verifyAdmin, (req, res) => {
+    if (req.user.role !== 'admin') {
+        return res.status(403).json({ error: 'Only Super Admin can toggle ad plans' });
+    }
+
+    const { active } = req.body;
+    if (active === undefined) {
+        return res.status(400).json({ error: 'Active status is required' });
+    }
+
+    const sql = `UPDATE ad_plans SET active = ? WHERE id = ?`;
+    db.run(sql, [active ? 1 : 0, req.params.id], function(err) {
+        if (err) return res.status(500).json({ error: err.message });
+        if (this.changes === 0) return res.status(404).json({ error: 'Ad plan not found' });
+        res.json({ message: 'Ad plan status toggled successfully!' });
     });
 });
 
