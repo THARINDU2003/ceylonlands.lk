@@ -16,6 +16,7 @@ async function initSuperAdmin() {
     loadAllInquiries();
     loadFinanceData();
     loadAllAgents();
+    loadAdPlans();
     checkSuperAdminAccess();
 }
 
@@ -285,6 +286,104 @@ if(addAgentForm) {
     };
 }
 
+// AD PLANS MANAGEMENT
+async function loadAdPlans() {
+    const table = document.getElementById('adPlansTable');
+    if (!table) return;
+    table.innerHTML = '<tr><td colspan="5" class="p-10 text-center text-gray-400 italic">Loading ad plans...</td></tr>';
+
+    try {
+        const token = localStorage.getItem('token');
+        const res = await fetch('/api/ad-plans');
+        const plans = await res.json();
+
+        if (plans.length === 0) {
+            table.innerHTML = '<tr><td colspan="5" class="p-10 text-center text-gray-400 italic">No ad plans found.</td></tr>';
+            return;
+        }
+
+        table.innerHTML = plans.map(p => `
+            <tr class="hover:bg-gray-50 transition">
+                <td class="px-6 py-4 font-bold text-gray-800">${p.name}</td>
+                <td class="px-6 py-4 font-bold text-blue-600">LKR ${p.price.toLocaleString()}</td>
+                <td class="px-6 py-4 text-gray-600">${p.duration_days} Days</td>
+                <td class="px-6 py-4">
+                    <button onclick="toggleAdPlanStatus('${p.id}', ${p.active})" class="px-3 py-1 rounded-full text-xs font-black uppercase ${p.active ? 'bg-green-100 text-green-700 hover:bg-red-100 hover:text-red-700' : 'bg-red-100 text-red-700 hover:bg-green-100 hover:text-green-700'} transition cursor-pointer shadow-sm" title="Click to toggle status">
+                        ${p.active ? 'Active (Click to Disable)' : 'Disabled (Click to Enable)'}
+                    </button>
+                </td>
+                <td class="px-6 py-4 text-right">
+                    <button onclick='openAdPlanModal(${JSON.stringify(p).replace(/'/g, "&apos;")})' class="text-blue-500 hover:text-blue-700 transition p-2"><i class="fas fa-edit"></i></button>
+                </td>
+            </tr>
+        `).join('');
+    } catch (e) { console.error(e); }
+}
+
+async function toggleAdPlanStatus(id, currentStatus) {
+    if(!confirm(`Are you sure you want to ${currentStatus ? 'disable' : 'enable'} this plan?`)) return;
+    
+    const token = localStorage.getItem('token');
+    const res = await fetch(`/api/admin/ad-plans/${id}/toggle`, {
+        method: 'PUT',
+        headers: { 
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ active: !currentStatus })
+    });
+
+    if(res.ok) {
+        loadAdPlans();
+    } else {
+        const err = await res.json();
+        alert(err.error || "Failed to toggle status.");
+    }
+}
+
+function openAdPlanModal(plan) {
+    document.getElementById('editPlanId').value = plan.id;
+    document.getElementById('editPlanName').value = plan.name;
+    document.getElementById('editPlanPrice').value = plan.price;
+    document.getElementById('editPlanDuration').value = plan.duration_days;
+    document.getElementById('adPlanModal').classList.remove('hidden');
+}
+
+function closeAdPlanModal() {
+    document.getElementById('adPlanModal').classList.add('hidden');
+}
+
+const editAdPlanForm = document.getElementById('editAdPlanForm');
+if(editAdPlanForm) {
+    editAdPlanForm.onsubmit = async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('editPlanId').value;
+        const token = localStorage.getItem('token');
+        
+        const payload = {
+            price: document.getElementById('editPlanPrice').value,
+            duration_days: document.getElementById('editPlanDuration').value
+        };
+
+        const res = await fetch(`/api/admin/ad-plans/${id}`, {
+            method: 'PUT',
+            headers: { 
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+
+        if(res.ok) {
+            closeAdPlanModal();
+            loadAdPlans();
+            alert("Ad Plan updated successfully!");
+        } else {
+            const err = await res.json();
+            alert(err.error || "Failed to update ad plan.");
+        }
+    };
+}
 
 // FINANCE & BALANCE
 async function loadFinanceData() {

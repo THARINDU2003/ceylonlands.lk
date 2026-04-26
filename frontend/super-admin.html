@@ -41,6 +41,9 @@
                     <button onclick="showTab('finance'); document.getElementById('superAdminSidebar').classList.add('-translate-x-full');" class="nav-link w-full flex items-center gap-3 px-4 py-3 text-gray-600 font-bold hover:bg-gray-50 transition rounded-lg">
                         <i class="fas fa-wallet"></i> Finance & Balance
                     </button>
+                    <button onclick="showTab('adplans'); document.getElementById('superAdminSidebar').classList.add('-translate-x-full');" class="nav-link w-full flex items-center gap-3 px-4 py-3 text-gray-600 font-bold hover:bg-gray-50 transition rounded-lg">
+                        <i class="fas fa-tags"></i> Ad Plans
+                    </button>
                     <button onclick="showTab('inquiries'); document.getElementById('superAdminSidebar').classList.add('-translate-x-full');" class="nav-link w-full flex items-center gap-3 px-4 py-3 text-gray-600 font-bold hover:bg-gray-50 transition rounded-lg">
                         <i class="fas fa-envelope"></i> Inquiries
                     </button>
@@ -258,6 +261,29 @@
                     </table>
                 </div>
             </div>
+
+            <!-- Ad Plans Tab -->
+            <div id="adplans" class="tab-content">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-black text-gray-800">Manage Ad Plans</h3>
+                </div>
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <table class="w-full text-left">
+                        <thead class="bg-gray-50 border-b border-gray-100">
+                            <tr>
+                                <th class="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest">Plan Name</th>
+                                <th class="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest">Price (LKR)</th>
+                                <th class="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest">Duration (Days)</th>
+                                <th class="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest">Status</th>
+                                <th class="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adPlansTable" class="divide-y divide-gray-50">
+                            <!-- Rows loaded via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </main>
     </div>
 
@@ -371,6 +397,32 @@
                 <div class="flex gap-4 pt-4">
                     <button type="submit" class="bg-blue-600 text-white flex-1 py-4 rounded-xl font-black hover:bg-blue-700 transition">Add Agent</button>
                     <button type="button" onclick="closeAgentModal()" class="text-gray-400 font-bold px-4 hover:text-gray-600">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Ad Plan Modal -->
+    <div id="adPlanModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl w-full max-w-md p-10">
+            <h2 class="text-3xl font-black mb-6 text-gray-900 border-b pb-4">Edit Ad Plan</h2>
+            <form id="editAdPlanForm" class="space-y-4">
+                <input type="hidden" id="editPlanId">
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Plan Name</label>
+                    <input type="text" id="editPlanName" class="w-full border-2 border-gray-100 rounded-xl p-3 bg-gray-50" readonly>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Price (LKR)</label>
+                    <input type="number" id="editPlanPrice" class="w-full border-2 border-gray-100 rounded-xl p-3" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Duration (Days)</label>
+                    <input type="number" id="editPlanDuration" class="w-full border-2 border-gray-100 rounded-xl p-3" required>
+                </div>
+                <div class="flex gap-4 pt-4">
+                    <button type="submit" class="bg-blue-600 text-white flex-1 py-4 rounded-xl font-black hover:bg-blue-700 transition">Save Changes</button>
+                    <button type="button" onclick="closeAdPlanModal()" class="text-gray-400 font-bold px-4 hover:text-gray-600">Cancel</button>
                 </div>
             </form>
         </div>
