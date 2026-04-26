@@ -88,6 +88,7 @@
             width: 100%;
         }
 
+        .card-accent.free-trial { background: linear-gradient(90deg, #f59e0b, #ef4444); }
         .card-accent.weekly { background: linear-gradient(90deg, #3b82f6, #2dd4bf); }
         .card-accent.monthly { background: linear-gradient(90deg, #059669, #3b82f6); }
         .card-accent.yearly { background: linear-gradient(90deg, #0f5b3a, #1e40af); }
@@ -99,6 +100,7 @@
         }
 
         .plan-name { font-size: 1.8rem; font-weight: 700; letter-spacing: -0.3px; }
+        .free-trial .plan-name { color: #b45309; }
         .weekly .plan-name { color: #1e4b8f; }
         .monthly .plan-name { color: #0f6e3f; }
         .yearly .plan-name { color: #0b5e42; }
@@ -240,6 +242,41 @@
             </div>
 
             <div class="packages-grid">
+                <!-- FREE TRIAL CARD -->
+                <div class="pricing-card free-trial">
+                    <div class="card-accent free-trial"></div>
+                    <div class="card-header">
+                        <div class="plan-name">1 Month Free</div>
+                        <div class="plan-sub"><i class="fas fa-gift"></i> Try for free</div>
+                        <div class="price flex flex-col items-center">
+                            <div class="text-green-500 font-bold text-sm bg-green-100 px-2 py-1 rounded-full mb-2 inline-block shadow-sm">✨ NEW USER OFFER</div>
+                            <span class="text-gray-400 line-through text-lg font-medium">LKR 6,000</span>
+                            <div>
+                                <span class="amount text-green-600">LKR 0</span>
+                                <span class="period"> / 1st month</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="features-list">
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-list-ul"></i></div>
+                            <div class="feature-text"><strong>Listings</strong></div>
+                            <div class="feature-badge">05 Listings</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-calendar-alt"></i></div>
+                            <div class="feature-text"><strong>Featured Duration</strong></div>
+                            <div class="feature-badge">30 Days</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-building"></i></div>
+                            <div class="feature-text">Company Logo</div>
+                            <div><i class="fas fa-check-circle text-green-500"></i> <span>Yes</span></div>
+                        </div>
+                    </div>
+                    <a href="/dashboard.html?action=post" class="btn-plan" style="background: linear-gradient(95deg, #f59e0b, #ea580c); box-shadow: 0 2px 8px rgba(234,88,12,0.15);" onmouseover="this.style.background='linear-gradient(95deg, #d97706, #c2410c)'" onmouseout="this.style.background='linear-gradient(95deg, #f59e0b, #ea580c)'">Start Free Trial <i class="fas fa-gift"></i></a>
+                </div>
+
                 <!-- WEEKLY (Basic) CARD -->
                 <div class="pricing-card weekly">
                     <div class="card-accent weekly"></div>
