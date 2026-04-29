@@ -346,6 +346,7 @@ function openAdPlanModal(plan) {
     document.getElementById('editPlanName').value = plan.name;
     document.getElementById('editPlanPrice').value = plan.price;
     document.getElementById('editPlanDuration').value = plan.duration_days;
+    document.getElementById('editPlanStatus').value = plan.active ? "1" : "0";
     document.getElementById('adPlanModal').classList.remove('hidden');
 }
 
@@ -362,7 +363,8 @@ if(editAdPlanForm) {
         
         const payload = {
             price: document.getElementById('editPlanPrice').value,
-            duration_days: document.getElementById('editPlanDuration').value
+            duration_days: document.getElementById('editPlanDuration').value,
+            active: document.getElementById('editPlanStatus').value === "1"
         };
 
         const res = await fetch(`/api/admin/ad-plans/${id}`, {

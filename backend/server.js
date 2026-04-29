@@ -713,13 +713,21 @@ app.put('/api/admin/ad-plans/:id', verifyAdmin, (req, res) => {
         return res.status(403).json({ error: 'Only Super Admin can manage ad plans' });
     }
 
-    const { price, duration_days } = req.body;
+    const { price, duration_days, active } = req.body;
     if (price === undefined || duration_days === undefined) {
         return res.status(400).json({ error: 'Price and duration are required' });
     }
 
-    const sql = `UPDATE ad_plans SET price = ?, duration_days = ? WHERE id = ?`;
-    db.run(sql, [price, duration_days, req.params.id], function(err) {
+    let sql, params;
+    if (active !== undefined) {
+        sql = `UPDATE ad_plans SET price = ?, duration_days = ?, active = ? WHERE id = ?`;
+        params = [price, duration_days, active ? 1 : 0, req.params.id];
+    } else {
+        sql = `UPDATE ad_plans SET price = ?, duration_days = ? WHERE id = ?`;
+        params = [price, duration_days, req.params.id];
+    }
+
+    db.run(sql, params, function(err) {
         if (err) return res.status(500).json({ error: err.message });
         if (this.changes === 0) return res.status(404).json({ error: 'Ad plan not found' });
         res.json({ message: 'Ad plan updated successfully!' });
