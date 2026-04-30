@@ -2,6 +2,13 @@
   publish = "frontend"
   command = ""
 
+# Don't intercept API calls — return 404 so the browser gets a real error, not HTML
+[[redirects]]
+  from = "/api/*"
+  to = "/api-not-available.json"
+  status = 404
+
+# SPA routing — all other pages fall back to index.html
 [[redirects]]
   from = "/*"
   to = "/index.html"

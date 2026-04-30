@@ -288,63 +288,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Mobile Nav Setup
 function setupMobileNav() {
-    const nav = document.querySelector('nav');
-    if (!nav) return;
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
     
-    const desktopMenu = nav.querySelector('.flex.items-center.space-x-6');
-    if (!desktopMenu) return;
+    if (!mobileMenuBtn || !mobileMenu) return;
 
-    // Hide desktop menu on small screens
-    desktopMenu.classList.remove('flex');
-    desktopMenu.classList.add('hidden', 'lg:flex');
-
-    const navContainer = desktopMenu.parentElement;
-
-    // Add mobile toggle button
-    const toggleBtn = document.createElement('button');
-    toggleBtn.className = 'lg:hidden text-gray-600 hover:text-blue-600 focus:outline-none text-2xl ml-auto p-2';
-    toggleBtn.innerHTML = '<i class="fas fa-bars"></i>';
-    navContainer.appendChild(toggleBtn);
-
-    // Create mobile menu drawer
-    const mobileDrawer = document.createElement('div');
-    mobileDrawer.className = 'hidden lg:hidden w-full bg-white border-t border-gray-100 absolute left-0 top-full shadow-2xl z-50 flex flex-col p-4 space-y-4';
-    
-    // Copy content
-    mobileDrawer.innerHTML = desktopMenu.innerHTML;
-    
-    // Fix layout of the cloned elements
-    const innerLinks = mobileDrawer.querySelectorAll('a, button, select');
-    innerLinks.forEach(el => {
-        el.classList.add('w-full', 'text-left', 'block');
-        el.classList.remove('ml-4');
+    mobileMenuBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+        const icon = mobileMenuBtn.querySelector('i');
+        if (icon) {
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-times');
+        }
     });
-    
-    const guestLinks = mobileDrawer.querySelector('#navGuestLinks');
-    if (guestLinks) {
-        guestLinks.classList.remove('flex', 'items-center', 'space-x-4', 'border-l', 'pl-4');
-        guestLinks.classList.add('flex', 'flex-col', 'space-y-4', 'mt-4');
-    }
 
-    const userLinks = mobileDrawer.querySelector('#navUserLinks');
-    if (userLinks) {
-        userLinks.classList.remove('flex', 'items-center', 'space-x-4', 'border-l', 'pl-4');
-        userLinks.classList.add('flex', 'flex-col', 'space-y-4', 'mt-4');
-    }
-
-    nav.classList.add('relative');
-    nav.appendChild(mobileDrawer);
-
-    // Re-sync auth and theme
-    if (window.auth && typeof window.auth.init === 'function') window.auth.init();
-    if (window.themeManager && typeof window.themeManager.init === 'function') window.themeManager.init();
-
-    // Toggle event
-    toggleBtn.addEventListener('click', () => {
-        mobileDrawer.classList.toggle('hidden');
-        toggleBtn.innerHTML = mobileDrawer.classList.contains('hidden') ? '<i class="fas fa-bars"></i>' : '<i class="fas fa-times"></i>';
+    // Close menu when clicking on a link
+    const mobileLinks = mobileMenu.querySelectorAll('a');
+    mobileLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            mobileMenu.classList.add('hidden');
+            const icon = mobileMenuBtn.querySelector('i');
+            if (icon) {
+                icon.classList.add('fa-bars');
+                icon.classList.remove('fa-times');
+            }
+        });
     });
 }
+
 
 function toggleWishlist(id) {
     alert('Wishlist feature coming soon!');
