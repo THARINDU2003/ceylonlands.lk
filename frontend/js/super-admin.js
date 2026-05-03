@@ -1,6 +1,7 @@
 // Super Admin Logic for CeylonTerrece
 
-const API_BAR = '/api/admin';
+const API_BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:') && window.location.port !== '5000' ? 'http://localhost:5000/api' : '/api';
+const API_BAR = `${API_BASE_URL}/admin`;
 
 async function initSuperAdmin() {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -32,7 +33,7 @@ function checkSuperAdminAccess() {
         if(companyBankSection) companyBankSection.classList.remove('hidden');
         
         // Load bank settings
-        fetch('/api/settings/bank')
+        fetch(`${API_BASE_URL}/settings/bank`)
             .then(r => r.json())
             .then(data => {
                 if(!data.error) {
@@ -76,7 +77,7 @@ function showTab(tabId) {
 async function loadDashboardStats() {
     try {
         const token = localStorage.getItem('token');
-        const resStats = await fetch('/api/dashboard-stats', {
+        const resStats = await fetch(`${API_BASE_URL}/dashboard-stats`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         const stats = await resStats.json();
@@ -204,7 +205,7 @@ async function loadAllAgents() {
 
     try {
         const token = localStorage.getItem('token');
-        const res = await fetch('/api/agents');
+        const res = await fetch(`${API_BASE_URL}/agents`);
         const agents = await res.json();
 
         if (agents.length === 0) {
@@ -242,7 +243,7 @@ function closeAgentModal() {
 async function deleteAgent(id) {
     if(!confirm("Remove this agent from the company?")) return;
     const token = localStorage.getItem('token');
-    const res = await fetch(`/api/admin/agents/${id}`, {
+    const res = await fetch(`${API_BAR}/agents/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
     });
@@ -265,7 +266,7 @@ if(addAgentForm) {
             license_number: document.getElementById('agentLicense').value
         };
 
-        const res = await fetch('/api/admin/agents', {
+        const res = await fetch(`${API_BAR}/agents`, {
             method: 'POST',
             headers: { 
                 'Authorization': `Bearer ${token}`,
@@ -294,7 +295,7 @@ async function loadAdPlans() {
 
     try {
         const token = localStorage.getItem('token');
-        const res = await fetch('/api/ad-plans');
+        const res = await fetch(`${API_BASE_URL}/ad-plans`);
         const plans = await res.json();
 
         if (plans.length === 0) {
@@ -324,7 +325,7 @@ async function toggleAdPlanStatus(id, currentStatus) {
     if(!confirm(`Are you sure you want to ${currentStatus ? 'disable' : 'enable'} this plan?`)) return;
     
     const token = localStorage.getItem('token');
-    const res = await fetch(`/api/admin/ad-plans/${id}/toggle`, {
+    const res = await fetch(`${API_BAR}/ad-plans/${id}/toggle`, {
         method: 'PUT',
         headers: { 
             'Authorization': `Bearer ${token}`,
@@ -367,7 +368,7 @@ if(editAdPlanForm) {
             active: document.getElementById('editPlanStatus').value === "1"
         };
 
-        const res = await fetch(`/api/admin/ad-plans/${id}`, {
+        const res = await fetch(`${API_BAR}/ad-plans/${id}`, {
             method: 'PUT',
             headers: { 
                 'Authorization': `Bearer ${token}`,
@@ -522,7 +523,7 @@ if(pbForm) {
             branch: document.getElementById('pbBranch').value
         };
 
-        const res = await fetch('/api/admin/settings/bank', {
+        const res = await fetch(`${API_BAR}/settings/bank`, {
             method: 'POST',
             headers: { 
                 'Authorization': `Bearer ${token}`,

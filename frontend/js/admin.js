@@ -1,4 +1,4 @@
-const API_URL = '/api';
+const API_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:') && window.location.port !== '5000' ? 'http://localhost:5000/api' : '/api';
 const UPLOADS_URL = '/uploads/';
 
 // Helper to resolve property images

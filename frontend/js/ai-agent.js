@@ -36,7 +36,7 @@ async function sendAIMessage() {
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
     try {
-        const response = await fetch('/api/ai/chat', {
+        const response = await fetch(((window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:') && window.location.port !== '5000' ? 'http://localhost:5000/api' : '/api') + '/ai/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ message })

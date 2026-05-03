@@ -1,9 +1,5 @@
-const API_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port !== '5000' 
-    ? 'http://localhost:5000/api' 
-    : '/api';
-const UPLOADS_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port !== '5000' 
-    ? 'http://localhost:5000/uploads/' 
-    : '/uploads/';
+const API_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:') && window.location.port !== '5000' ? 'http://localhost:5000/api' : '/api';
+const UPLOADS_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:') && window.location.port !== '5000' ? 'http://localhost:5000/uploads/' : '/uploads/';
 
 // Helper to resolve property images
 function resolveImagePath(path, size = '500') {
