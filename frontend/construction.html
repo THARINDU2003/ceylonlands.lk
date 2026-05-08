@@ -583,37 +583,52 @@
             alert("Payment error: " + error);
         };
 
-        document.getElementById('payhere-payment-btn').addEventListener('click', function (e) {
+        document.getElementById('payhere-payment-btn').addEventListener('click', async function (e) {
             e.preventDefault();
             
             const tempReg = JSON.parse(localStorage.getItem('tempProRegistration') || '{}');
+            let orderIdStr = "Const_Reg_" + Date.now();
+            let amountStr = "1000.00";
             
-            var payment = {
-                "sandbox": true,
-                "merchant_id": "121XXXX",       // Replace with your real Sandbox Merchant ID
-                "return_url": window.location.origin + "/dashboard.html",
-                "cancel_url": window.location.origin + "/construction.html",
-                "notify_url": "http://sample.com/notify", // Replace with backend notify webhook
-                "order_id": "Const_Reg_" + Date.now(),
-                "items": "Professional Registration",
-                "amount": "1000.00",
-                "currency": "LKR",
-                "hash": "", // Optional for testing if hash disabled, else generate from backend
-                "first_name": tempReg.name || "Customer",
-                "last_name": "Name",
-                "email": "customer@example.com",
-                "phone": tempReg.phone || "0771234567",
-                "address": "No.1, Galle Road",
-                "city": tempReg.city || "Colombo",
-                "country": "Sri Lanka",
-                "delivery_address": "No.1, Galle Road",
-                "delivery_city": "Colombo",
-                "delivery_country": "Sri Lanka",
-                "custom_1": "",
-                "custom_2": ""
-            };
-            
-            payhere.startCheckout(payment);
+            try {
+                const apiBase = ((window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:') && window.location.port !== '5000' ? 'http://localhost:5000/api' : '/api');
+                const res = await fetch(apiBase + '/payhere/hash', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ order_id: orderIdStr, amount: amountStr, currency: 'LKR' })
+                });
+                const data = await res.json();
+
+                var payment = {
+                    "sandbox": true,
+                    "merchant_id": data.merchant_id,
+                    "return_url": window.location.origin + "/dashboard.html",
+                    "cancel_url": window.location.origin + "/construction.html",
+                    "notify_url": "http://sample.com/notify", // Replace with backend notify webhook
+                    "order_id": orderIdStr,
+                    "items": "Professional Registration",
+                    "amount": amountStr,
+                    "currency": "LKR",
+                    "hash": data.hash,
+                    "first_name": tempReg.name || "Customer",
+                    "last_name": "Name",
+                    "email": "customer@example.com",
+                    "phone": tempReg.phone || "0771234567",
+                    "address": "No.1, Galle Road",
+                    "city": tempReg.city || "Colombo",
+                    "country": "Sri Lanka",
+                    "delivery_address": "No.1, Galle Road",
+                    "delivery_city": "Colombo",
+                    "delivery_country": "Sri Lanka",
+                    "custom_1": "",
+                    "custom_2": ""
+                };
+                
+                payhere.startCheckout(payment);
+            } catch(err) {
+                console.error('Error securely initializing payment:', err);
+                alert('Could not initialize payment securely. Please try again.');
+            }
         });
 
         document.getElementById('proRegistrationForm')?.addEventListener('submit', function(e) {

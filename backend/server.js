@@ -753,6 +753,29 @@ app.put('/api/admin/ad-plans/:id/toggle', verifyAdmin, (req, res) => {
     });
 });
 
+// ============= PayHere Integration Route =============
+app.post('/api/payhere/hash', (req, res) => {
+    const crypto = require('crypto');
+    const { order_id, amount, currency } = req.body;
+    
+    // Replace these with environment variables in production
+    const merchant_id = "1235652";
+    const merchant_secret = "MzE4MTc3MTQ2NjQyNDMzODkwMDMxNjAwODM1OTk3MTkzOTEwNjQ5MA==";
+
+    if (!order_id || !amount || !currency) {
+        return res.status(400).json({ error: 'order_id, amount, and currency are required' });
+    }
+
+    // Amount must be formatted to two decimal places
+    const formattedAmount = parseFloat(amount).toLocaleString('en-us', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace(/,/g, '');
+
+    const md5Sig = crypto.createHash('md5').update(merchant_secret).digest('hex').toUpperCase();
+    const hashData = merchant_id + order_id + formattedAmount + currency + md5Sig;
+    const hash = crypto.createHash('md5').update(hashData).digest('hex').toUpperCase();
+
+    res.json({ hash: hash, merchant_id: merchant_id });
+});
+
 // ============= AI Agent Route =============
 app.post('/api/ai/chat', async (req, res) => {
     const { message } = req.body;
