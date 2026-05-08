@@ -549,30 +549,11 @@
                     </div>
                 </div>
 
-                <form method="post" action="https://sandbox.payhere.lk/pay/checkout">
-                    <input type="hidden" name="merchant_id" value="121XXXX"> <!-- Replace with your Sandbox Merchant ID -->
-                    <input type="hidden" name="return_url" value="http://localhost:5000/dashboard.html">
-                    <input type="hidden" name="cancel_url" value="http://localhost:5000/construction.html">
-                    <input type="hidden" name="notify_url" value="http://localhost:5000/api/payhere-webhook">  
-                    <input type="hidden" name="order_id" value="Construction_Reg_Order">
-                    <input type="hidden" name="items" value="Professional Registration"><br>
-                    <input type="hidden" name="currency" value="LKR">
-                    <input type="hidden" name="amount" value="1000">  
-                    <input type="hidden" name="first_name" value="User">
-                    <input type="hidden" name="last_name" value="Name">
-                    <input type="hidden" name="email" value="user@example.com">
-                    <input type="hidden" name="phone" value="0771234567">
-                    <input type="hidden" name="address" value="No.1, Galle Road">
-                    <input type="hidden" name="city" value="Colombo">
-                    <input type="hidden" name="country" value="Sri Lanka">
-                    
-                    <p class="text-sm text-gray-600 mb-4 text-center">Click below to securely pay using your Credit or Debit card via PayHere.</p>
-                    <button type="submit" class="w-full bg-green-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-green-600 transition shadow-lg flex items-center justify-center gap-2 mb-4">
-                        <i class="fas fa-lock"></i> Pay via PayHere
-                    </button>
-                    
-
-                </form>
+                <div class="flex flex-col items-center justify-center mb-4">
+                    <p class="text-sm text-gray-600 mb-6 text-center">Click below to securely pay the registration fee via PayHere.</p>
+                    <div id="payhere-form" data-pay-id="oe816cdd4" data-type="SANDBOX"></div>
+                    <script src="https://sandbox.payhere.lk/payhere.pay.button.js" id="payhere-button"></script>
+                </div>
             </div>
         </div>
     </div>
