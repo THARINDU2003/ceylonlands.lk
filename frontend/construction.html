@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/css/style.css">
     <script>if(localStorage.getItem('theme')==='dark'){document.documentElement.classList.add('dark-theme');}</script>
+    <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
 </head>
 
 <body class="bg-gray-100">
@@ -176,9 +177,9 @@
 
     <!-- 3. Category Navigation (Quick Links/Icons) -->
     <section class="max-w-7xl mx-auto px-4 py-12 relative z-20 -mt-8">
-        <div class="grid grid-cols-2 md:grid-cols-5 gap-4 md:gap-6">
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6">
             <!-- Cat 1 -->
-            <a href="#" class="bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-2 border border-gray-100 flex flex-col items-center text-center group cursor-pointer">
+            <a onclick="openProModal('machinery')" class="bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-2 border border-gray-100 flex flex-col items-center text-center group cursor-pointer">
                 <div class="w-16 h-16 bg-orange-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-orange-500 transition-colors">
                     <i class="fas fa-tractor text-2xl text-orange-500 group-hover:text-white transition-colors"></i>
                 </div>
@@ -186,7 +187,7 @@
                 <p class="text-xs text-gray-500">Dozers, JCBs, Graders</p>
             </a>
             <!-- Cat 2 -->
-            <a href="#" class="bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-2 border border-gray-100 flex flex-col items-center text-center group cursor-pointer">
+            <a onclick="openProModal('contractor')" class="bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-2 border border-gray-100 flex flex-col items-center text-center group cursor-pointer">
                 <div class="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-blue-500 transition-colors">
                     <i class="fas fa-hard-hat text-2xl text-blue-500 group-hover:text-white transition-colors"></i>
                 </div>
@@ -194,7 +195,7 @@
                 <p class="text-xs text-gray-500">Builders, Masons, Carpenters</p>
             </a>
             <!-- Cat 3 -->
-            <a href="#" class="bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-2 border border-gray-100 flex flex-col items-center text-center group cursor-pointer">
+            <a onclick="openProModal('hardware')" class="bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-2 border border-gray-100 flex flex-col items-center text-center group cursor-pointer">
                 <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-gray-600 transition-colors">
                     <i class="fas fa-tools text-2xl text-gray-600 group-hover:text-white transition-colors"></i>
                 </div>
@@ -202,7 +203,7 @@
                 <p class="text-xs text-gray-500">Cement, Sand, Metal, Steel</p>
             </a>
             <!-- Cat 4 -->
-            <a href="#" class="bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-2 border border-gray-100 flex flex-col items-center text-center group cursor-pointer">
+            <a onclick="openProModal('house_planning')" class="bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-2 border border-gray-100 flex flex-col items-center text-center group cursor-pointer">
                 <div class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-green-500 transition-colors">
                     <i class="fas fa-drafting-compass text-2xl text-green-500 group-hover:text-white transition-colors"></i>
                 </div>
@@ -210,12 +211,20 @@
                 <p class="text-xs text-gray-500">Architects & Draftsmen</p>
             </a>
             <!-- Cat 5 -->
-            <a href="#" class="bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-2 border border-gray-100 flex flex-col items-center text-center group cursor-pointer">
+            <a onclick="openProModal('legal_business')" class="bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-2 border border-gray-100 flex flex-col items-center text-center group cursor-pointer">
                 <div class="w-16 h-16 bg-purple-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-purple-600 transition-colors">
                     <i class="fas fa-balance-scale text-2xl text-purple-600 group-hover:text-white transition-colors"></i>
                 </div>
                 <h3 class="font-bold text-gray-800 mb-1">Legal & Business</h3>
                 <p class="text-xs text-gray-500">Consultants & Notaries</p>
+            </a>
+            <!-- Cat 6 -->
+            <a onclick="openProModal('home_design_personal')" class="bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-2 border border-gray-100 flex flex-col items-center text-center group cursor-pointer">
+                <div class="w-16 h-16 bg-pink-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-pink-500 transition-colors">
+                    <i class="fas fa-couch text-2xl text-pink-500 group-hover:text-white transition-colors"></i>
+                </div>
+                <h3 class="font-bold text-gray-800 mb-1">Home Design</h3>
+                <p class="text-xs text-gray-500">Personal / Company</p>
             </a>
         </div>
     </section>
@@ -470,13 +479,15 @@
                         </div>
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2">Service Category *</label>
-                            <select required class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:ring-0 focus:border-blue-500 outline-none transition bg-gray-50 focus:bg-white text-gray-800 cursor-pointer">
+                            <select id="proCategory" required class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:ring-0 focus:border-blue-500 outline-none transition bg-gray-50 focus:bg-white text-gray-800 cursor-pointer">
                                 <option value="">Select Category...</option>
                                 <option value="hardware">Hardware / Building Material</option>
                                 <option value="house_planning">House Planning / Architects</option>
                                 <option value="contractor">Contractor & Labor</option>
                                 <option value="machinery">Machinery & Equipment</option>
                                 <option value="legal_business">Legal & Business</option>
+                                <option value="home_design_personal">Home Design (Personal)</option>
+                                <option value="home_design_company">Home Design (Company)</option>
                             </select>
                         </div>
                         <div>
@@ -514,27 +525,139 @@
             </div>
         </div>
     </div>
+    
+    <!-- Payment Modal UI -->
+    <div id="paymentModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden">
+            <div class="bg-blue-600 p-6 text-white text-center relative">
+                <button onclick="closePaymentModal()" class="absolute top-4 right-4 text-white hover:text-gray-200">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+                <h3 class="text-2xl font-bold mb-1">Checkout</h3>
+                <p class="text-blue-100">Pay securely with Credit/Debit Card</p>
+            </div>
+            
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
+                    <div>
+                        <p class="text-sm text-gray-500">Selected Plan</p>
+                        <p class="font-bold text-gray-800" id="modalPlanName">Professional Registration</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-sm text-gray-500">Total</p>
+                        <p class="font-bold text-blue-600 text-xl" id="modalPrice">LKR 1,000</p>
+                    </div>
+                </div>
+
+                <form method="post" action="https://sandbox.payhere.lk/pay/checkout">
+                    <input type="hidden" name="merchant_id" value="121XXXX"> <!-- Replace with your Sandbox Merchant ID -->
+                    <input type="hidden" name="return_url" value="http://localhost:5000/dashboard.html">
+                    <input type="hidden" name="cancel_url" value="http://localhost:5000/construction.html">
+                    <input type="hidden" name="notify_url" value="http://localhost:5000/api/payhere-webhook">  
+                    <input type="hidden" name="order_id" value="Construction_Reg_Order">
+                    <input type="hidden" name="items" value="Professional Registration"><br>
+                    <input type="hidden" name="currency" value="LKR">
+                    <input type="hidden" name="amount" value="1000">  
+                    <input type="hidden" name="first_name" value="User">
+                    <input type="hidden" name="last_name" value="Name">
+                    <input type="hidden" name="email" value="user@example.com">
+                    <input type="hidden" name="phone" value="0771234567">
+                    <input type="hidden" name="address" value="No.1, Galle Road">
+                    <input type="hidden" name="city" value="Colombo">
+                    <input type="hidden" name="country" value="Sri Lanka">
+                    
+                    <p class="text-sm text-gray-600 mb-4 text-center">Click below to securely pay using your Credit or Debit card via PayHere.</p>
+                    <button type="submit" class="w-full bg-green-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-green-600 transition shadow-lg flex items-center justify-center gap-2 mb-4">
+                        <i class="fas fa-lock"></i> Pay via PayHere
+                    </button>
+                    
+                    <div class="relative flex py-2 items-center">
+                        <div class="flex-grow border-t border-gray-300"></div>
+                        <span class="flex-shrink-0 mx-4 text-gray-400 text-sm font-medium">OR BANK TRANSFER</span>
+                        <div class="flex-grow border-t border-gray-300"></div>
+                    </div>
+
+                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 mt-2">
+                        <h4 class="font-bold text-gray-800 text-sm mb-2 flex items-center gap-2"><i class="fas fa-university text-blue-600"></i> Direct Bank Transfer</h4>
+                        <p class="text-xs text-gray-600 mb-3">Deposit the total amount to the account below and WhatsApp us the payment slip.</p>
+                        <div class="text-sm text-gray-700 space-y-1 bg-white p-3 border border-gray-200 rounded" id="bankDetailsBox">
+                            <p><span class="font-semibold">Bank:</span> <span id="pubBankDisp">Loading...</span></p>
+                            <p><span class="font-semibold">Account Name:</span> <span id="pubNameDisp">Loading...</span></p>
+                            <p><span class="font-semibold">Account No:</span> <span id="pubNumDisp">Loading...</span></p>
+                            <p><span class="font-semibold">Branch:</span> <span id="pubBranchDisp">Loading...</span></p>
+                        </div>
+                        <button type="submit" class="mt-3 w-full bg-green-100 text-green-700 border border-green-300 font-bold py-2 px-4 rounded-lg hover:bg-green-200 transition shadow-sm flex items-center justify-center gap-2 text-sm">
+                            <i class="fab fa-whatsapp text-lg"></i> Send Slip via WhatsApp
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/paddle.js"></script>
     <script>
+        function openProModal(category = '') {
+            document.getElementById('proRegistrationModal').classList.remove('hidden');
+            if(category) {
+                document.getElementById('proCategory').value = category;
+            }
+        }
+
         document.getElementById('proRegistrationForm')?.addEventListener('submit', function(e) {
             e.preventDefault();
             
-            // Show loading state on button
             const btn = this.querySelector('button[type="submit"]');
             const originalContent = btn.innerHTML;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
             btn.disabled = true;
             
-            // Simulate payment processing / API call
+            // Save data locally for success page
+            const categorySelect = document.getElementById('proCategory');
+            const formData = {
+                name: this.querySelector('input[type="text"]').value,
+                category: categorySelect.options[categorySelect.selectedIndex].text,
+                phone: this.querySelector('input[type="tel"]').value,
+            };
+            localStorage.setItem('tempProRegistration', JSON.stringify(formData));
+
             setTimeout(() => {
-                alert('Success! You will be redirected to the secure payment gateway to complete the Rs. 1000/= registration fee.');
                 btn.innerHTML = originalContent;
                 btn.disabled = false;
                 document.getElementById('proRegistrationModal').classList.add('hidden');
-                this.reset();
-            }, 1500);
+                document.getElementById('paymentModal').classList.remove('hidden');
+                
+                // Load Bank Details
+                fetch(((window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:') && window.location.port !== '5000' ? 'http://localhost:5000/api' : '/api') + '/settings/bank')
+                    .then(res => res.json())
+                    .then(data => {
+                        if(!data.error) {
+                            document.getElementById('pubBankDisp').innerText = data.bank || '';
+                            document.getElementById('pubNameDisp').innerText = data.name || '';
+                            document.getElementById('pubNumDisp').innerText = data.account || '';
+                            document.getElementById('pubBranchDisp').innerText = data.branch || '';
+                        }
+                    })
+                    .catch(err => {
+                        document.getElementById('bankDetailsBox').innerHTML = "<p class='text-red-500'>Bank details temporarily unavailable.</p>";
+                    });
+            }, 800);
         });
 
-        // Close modal when clicking outside
+        function closePaymentModal() {
+            document.getElementById('paymentModal').classList.add('hidden');
+        }
+
+        function triggerPaddleCheckout() {
+            closePaymentModal();
+            openPaddlePayment('Weekly Basic'); // Using placeholder
+        }
+
+        function simulatePaymentSuccess() {
+            alert("Payment recorded! Redirecting to your dashboard...");
+            window.location.href = '/dashboard.html';
+        }
+
         document.getElementById('proRegistrationModal').addEventListener('click', function(e) {
             if (e.target === this) {
                 this.classList.add('hidden');

@@ -512,12 +512,27 @@
                     </div>
                 </div>
 
-                <form onsubmit="event.preventDefault(); triggerPaddleCheckout();">
-                    <!-- Card Payment Section via Paddle -->
-                    <p class="text-sm text-gray-600 mb-4 text-center">Click below to securely pay using your Credit or Debit card via Paddle.</p>
+                <form method="post" action="https://sandbox.payhere.lk/pay/checkout">
+                    <input type="hidden" name="merchant_id" value="121XXXX"> <!-- Replace with your Sandbox Merchant ID -->
+                    <input type="hidden" name="return_url" value="http://localhost:5000/dashboard.html">
+                    <input type="hidden" name="cancel_url" value="http://localhost:5000/pricing.html">
+                    <input type="hidden" name="notify_url" value="http://localhost:5000/api/payhere-webhook">  
+                    <input type="hidden" name="order_id" value="Ad_Plan_Order">
+                    <input type="hidden" name="items" value="Ad Package"><br>
+                    <input type="hidden" name="currency" value="LKR">
+                    <input type="hidden" name="amount" value="1500">  
+                    <input type="hidden" name="first_name" value="Customer">
+                    <input type="hidden" name="last_name" value="Name">
+                    <input type="hidden" name="email" value="customer@example.com">
+                    <input type="hidden" name="phone" value="0771234567">
+                    <input type="hidden" name="address" value="No.1, Galle Road">
+                    <input type="hidden" name="city" value="Colombo">
+                    <input type="hidden" name="country" value="Sri Lanka">
+                    
+                    <p class="text-sm text-gray-600 mb-4 text-center">Click below to securely pay using your Credit or Debit card via PayHere.</p>
 
                     <button type="submit" class="w-full bg-green-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-green-600 transition shadow-lg flex items-center justify-center gap-2 mb-4">
-                        <i class="fas fa-lock"></i> Pay via Card (Paddle)
+                        <i class="fas fa-lock"></i> Pay via PayHere
                     </button>
                     
                     <div class="relative flex py-2 items-center">
