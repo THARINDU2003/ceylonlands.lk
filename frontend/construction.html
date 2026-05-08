@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/css/style.css">
     <script>if(localStorage.getItem('theme')==='dark'){document.documentElement.classList.add('dark-theme');}</script>
-    <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
+    <script type="text/javascript" src="https://sandbox.payhere.lk/lib/payhere.js"></script>
 </head>
 
 <body class="bg-gray-100">
@@ -551,14 +551,15 @@
 
                 <div class="flex flex-col items-center justify-center mb-4">
                     <p class="text-sm text-gray-600 mb-6 text-center">Click below to securely pay the registration fee via PayHere.</p>
-                    <div id="payhere-form" data-pay-id="oe816cdd4" data-type="SANDBOX"></div>
-                    <script src="https://sandbox.payhere.lk/payhere.pay.button.js" id="payhere-button"></script>
+                    <button id="payhere-payment-btn" class="w-full bg-green-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-green-600 transition shadow-lg flex items-center justify-center gap-2 mb-4">
+                        <i class="fas fa-credit-card"></i> Pay 1000 LKR via PayHere
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="/js/paddle.js"></script>
+
     <script>
         function openProModal(category = '') {
             document.getElementById('proRegistrationModal').classList.remove('hidden');
@@ -566,6 +567,54 @@
                 document.getElementById('proCategory').value = category;
             }
         }
+
+        // PayHere Payment Configuration (JS SDK)
+        payhere.onCompleted = function onCompleted(orderId) {
+            console.log("Payment completed. OrderID:" + orderId);
+            simulatePaymentSuccess();
+        };
+
+        payhere.onDismissed = function onDismissed() {
+            console.log("Payment dismissed");
+        };
+
+        payhere.onError = function onError(error) {
+            console.log("Error:"  + error);
+            alert("Payment error: " + error);
+        };
+
+        document.getElementById('payhere-payment-btn').addEventListener('click', function (e) {
+            e.preventDefault();
+            
+            const tempReg = JSON.parse(localStorage.getItem('tempProRegistration') || '{}');
+            
+            var payment = {
+                "sandbox": true,
+                "merchant_id": "121XXXX",       // Replace with your real Sandbox Merchant ID
+                "return_url": window.location.origin + "/dashboard.html",
+                "cancel_url": window.location.origin + "/construction.html",
+                "notify_url": "http://sample.com/notify", // Replace with backend notify webhook
+                "order_id": "Const_Reg_" + Date.now(),
+                "items": "Professional Registration",
+                "amount": "1000.00",
+                "currency": "LKR",
+                "hash": "", // Optional for testing if hash disabled, else generate from backend
+                "first_name": tempReg.name || "Customer",
+                "last_name": "Name",
+                "email": "customer@example.com",
+                "phone": tempReg.phone || "0771234567",
+                "address": "No.1, Galle Road",
+                "city": tempReg.city || "Colombo",
+                "country": "Sri Lanka",
+                "delivery_address": "No.1, Galle Road",
+                "delivery_city": "Colombo",
+                "delivery_country": "Sri Lanka",
+                "custom_1": "",
+                "custom_2": ""
+            };
+            
+            payhere.startCheckout(payment);
+        });
 
         document.getElementById('proRegistrationForm')?.addEventListener('submit', function(e) {
             e.preventDefault();

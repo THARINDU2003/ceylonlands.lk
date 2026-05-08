@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
-    <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
+    <script type="text/javascript" src="https://sandbox.payhere.lk/lib/payhere.js"></script>
     <style>
         .pricing-section {
             background: linear-gradient(145deg, #eef5ff 0%, #dcfce7 100%);
@@ -457,7 +457,7 @@
     <script src="/js/theme.js"></script>
     <script src="/js/auth.js"></script>
     <script src="/js/main.js"></script>
-    <script src="/js/paddle.js"></script>
+
     <script>
         let currentSelectedPlan = '';
 
@@ -477,38 +477,66 @@
             document.getElementById('modalPlanName').innerText = planName;
             document.getElementById('modalPrice').innerText = 'LKR ' + price;
             document.getElementById('paymentModal').classList.remove('hidden');
-
-            const container = document.getElementById('payhere-button-container');
-            if (container) {
-                container.innerHTML = ''; // Clear previous
-                
-                let payId = '';
-                if (planName.includes('Weekly')) payId = 'o66df251d';
-                else if (planName.includes('Monthly')) payId = 'o618acf8';
-                else if (planName.includes('Yearly')) payId = 'o711f9c6e';
-                
-                if (payId) {
-                    const formDiv = document.createElement('div');
-                    formDiv.id = 'payhere-form';
-                    formDiv.setAttribute('data-pay-id', payId);
-                    formDiv.setAttribute('data-type', 'SANDBOX');
-                    container.appendChild(formDiv);
-                    
-                    const script = document.createElement('script');
-                    script.src = 'https://sandbox.payhere.lk/payhere.pay.button.js';
-                    container.appendChild(script);
-                }
-            }
         }
 
         function closePaymentModal() {
             document.getElementById('paymentModal').classList.add('hidden');
         }
 
-        function triggerPaddleCheckout() {
-            closePaymentModal();
-            openPaddlePayment(currentSelectedPlan);
-        }
+        // PayHere Payment Configuration (JS SDK)
+        payhere.onCompleted = function onCompleted(orderId) {
+            console.log("Payment completed. OrderID:" + orderId);
+            alert("Payment recorded! Redirecting to your dashboard...");
+            window.location.href = '/dashboard.html';
+        };
+
+        payhere.onDismissed = function onDismissed() {
+            console.log("Payment dismissed");
+        };
+
+        payhere.onError = function onError(error) {
+            console.log("Error:"  + error);
+            alert("Payment error: " + error);
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const btn = document.getElementById('payhere-payment-btn');
+            if(btn) {
+                btn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    
+                    let priceStr = document.getElementById('modalPrice').innerText.replace(/[^0-9]/g, '');
+                    let amountStr = priceStr + ".00";
+
+                    var payment = {
+                        "sandbox": true,
+                        "merchant_id": "121XXXX",       // Replace with your real Sandbox Merchant ID
+                        "return_url": window.location.origin + "/dashboard.html",
+                        "cancel_url": window.location.origin + "/pricing.html",
+                        "notify_url": "http://sample.com/notify", // Replace with backend notify webhook
+                        "order_id": "Ad_Plan_" + currentSelectedPlan.replace(/\s+/g, '_') + "_" + Date.now(),
+                        "items": currentSelectedPlan + " Ad Package",
+                        "amount": amountStr,
+                        "currency": "LKR",
+                        "hash": "", // Optional for testing if hash disabled, else generate from backend
+                        "first_name": "Customer",
+                        "last_name": "Name",
+                        "email": "customer@example.com",
+                        "phone": "0771234567",
+                        "address": "No.1, Galle Road",
+                        "city": "Colombo",
+                        "country": "Sri Lanka",
+                        "delivery_address": "No.1, Galle Road",
+                        "delivery_city": "Colombo",
+                        "delivery_country": "Sri Lanka",
+                        "custom_1": "",
+                        "custom_2": ""
+                    };
+                    
+                    payhere.startCheckout(payment);
+                });
+            }
+        });
     </script>
 
     <!-- Payment Modal UI -->
@@ -536,9 +564,9 @@
 
                 <div class="flex flex-col items-center justify-center mb-4">
                     <p class="text-sm text-gray-600 mb-6 text-center">Click below to securely pay via PayHere.</p>
-                    <div id="payhere-button-container" class="w-full flex justify-center">
-                        <!-- Dynamic PayHere button will be inserted here -->
-                    </div>
+                    <button id="payhere-payment-btn" class="w-full bg-green-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-green-600 transition shadow-lg flex items-center justify-center gap-2 mb-4">
+                        <i class="fas fa-credit-card"></i> Pay via PayHere
+                    </button>
                 </div>
             </div>
         </div>
