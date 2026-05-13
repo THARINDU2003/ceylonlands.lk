@@ -55,7 +55,7 @@ const auth = {
             body: JSON.stringify({ name, email, password, account_type, company_name })
         });
 
-        // Guard: if server returns HTML instead of JSON (e.g. Netlify static hosting), give a clear error
+        // Guard: if server returns HTML instead of JSON, give a clear error
         const contentType = response.headers.get('content-type') || '';
         if (!contentType.includes('application/json')) {
             throw new Error('Backend server is not available. This site requires a live Node.js backend to register. Please contact support.');
@@ -78,7 +78,7 @@ const auth = {
             body: JSON.stringify({ email, password })
         });
 
-        // Guard: if server returns HTML instead of JSON (e.g. Netlify static hosting), give a clear error
+        // Guard: if server returns HTML instead of JSON, give a clear error
         const contentType = response.headers.get('content-type') || '';
         if (!contentType.includes('application/json')) {
             throw new Error('Cannot connect to server. The backend is not running. Please try again later or contact support.');

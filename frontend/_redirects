@@ -1,5 +1,0 @@
-# Do NOT intercept API calls - let them fail properly (not pretend to be HTML)
-/api/*  404  # This tells Netlify: API routes don't exist here, return 404 not index.html
-
-# All other routes → SPA routing
-/*  /index.html  200
