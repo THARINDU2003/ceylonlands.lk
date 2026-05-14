@@ -45,6 +45,22 @@ db.serialize(() => {
         )
     `);
 
+    // Construction Professionals table
+    db.run(`
+        CREATE TABLE IF NOT EXISTS construction_professionals (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            company_name TEXT NOT NULL,
+            registration_number TEXT,
+            location TEXT,
+            category TEXT,
+            phone TEXT NOT NULL,
+            email TEXT,
+            portfolio_link TEXT,
+            status TEXT DEFAULT 'pending',
+            created_at DATETIME DEFAULT (datetime('now'))
+        )
+    `);
+
     // Users table
     db.run(`
         CREATE TABLE IF NOT EXISTS users (

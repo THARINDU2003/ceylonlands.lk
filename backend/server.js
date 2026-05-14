@@ -255,6 +255,51 @@ app.get('/api/properties/:id', (req, res) => {
     });
 });
 
+// Create new construction professional registration
+app.post('/api/construction-professionals', (req, res) => {
+    let { company_name, registration_number, location, category, phone, email, portfolio_link } = req.body;
+
+    company_name = sanitizeText(company_name);
+    
+    if (!company_name || !phone || !category) {
+        return res.status(400).json({ error: 'Company Name, Phone, and Category are required.' });
+    }
+
+    const sql = `INSERT INTO construction_professionals (company_name, registration_number, location, category, phone, email, portfolio_link, created_at) 
+                 VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'))`;
+    
+    db.run(sql, [company_name, registration_number, location, category, phone, email, portfolio_link], function(err) {
+        if (err) {
+            return res.status(500).json({ error: err.message });
+        }
+        res.json({ id: this.lastID, message: 'Construction Professional registered successfully' });
+    });
+});
+
+// Get construction professionals
+app.get('/api/construction-professionals', (req, res) => {
+    const { category, location } = req.query;
+    let sql = 'SELECT * FROM construction_professionals WHERE status = "active"';
+    let params = [];
+
+    if (category) {
+        sql += ' AND category = ?';
+        params.push(category);
+    }
+    if (location) {
+        sql += ' AND location LIKE ?';
+        params.push(`%${location}%`);
+    }
+
+    db.all(sql, params, (err, rows) => {
+        if (err) {
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        res.json(rows);
+    });
+});
+
 // Create new property (Seller)
 app.post('/api/properties', (req, res) => {
     let { title, description, price, property_type, offer_type, bedrooms, bathrooms, land_area, address, city, district, seller_name, seller_phone, seller_email, images, status, ad_plan } = req.body;
