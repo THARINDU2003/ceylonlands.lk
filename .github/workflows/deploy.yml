@@ -2,7 +2,7 @@ name: Auto Deploy to cPanel
 on:
   push:
     branches:
-      - main  # ඔබේ branch එක master නම් මෙය master ලෙස වෙනස් කරන්න
+      - main
 
 jobs:
   deploy:
