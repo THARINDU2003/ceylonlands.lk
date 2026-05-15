@@ -1,4 +1,5 @@
+---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home3/ceylonte/public_html/
-    - /bin/cp -R * $DEPLOYPATH
+    - export DEPLOYPATH=/home/celonte/public_html/
+    - /bin/cp -R images $DEPLOYPATH
