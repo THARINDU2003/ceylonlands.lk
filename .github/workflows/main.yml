@@ -18,5 +18,3 @@ jobs:
             cd ~/repositories/ceylonterrece.com
             git pull origin main
             cp -R frontend/* /home3/ceylonte/public_html/
-            mkdir -p /home3/ceylonte/public_html/app
-            cp -R mobile_app/* /home3/ceylonte/public_html/app/
