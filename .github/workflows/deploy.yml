@@ -11,7 +11,7 @@ jobs:
       - name: Deploying via SSH
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.SSH_HOST }}
+          host: ${{ secrets.SSH_HOST }}  # මෙතන SSH_HOST කියන නම secret එකේ නමට සමාන විය යුතුයි
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
