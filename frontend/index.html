@@ -229,10 +229,30 @@
     </section>
 
     <!-- Featured Properties Section -->
-    <section class="max-w-7xl mx-auto px-4 py-16">
+    <section class="max-w-7xl mx-auto px-4 py-10">
         <h2 class="text-3xl font-bold mb-8">Featured Properties</h2>
         <div class="overflow-x-auto pb-4 scrollbar-hide">
             <div id="featuredProperties" class="flex gap-8 w-max">
+                <!-- Properties will be loaded dynamically by main.js -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Most Popular Ads Section -->
+    <section class="max-w-7xl mx-auto px-4 py-10 border-t border-gray-100 dark:border-gray-800">
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-3xl font-bold">Most Popular Ads</h2>
+            <div class="hidden md:flex gap-2">
+                <button onclick="scrollPopularAds(-1)" class="bg-blue-50 hover:bg-blue-100 text-blue-600 w-10 h-10 rounded-full flex items-center justify-center transition shadow-sm">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button onclick="scrollPopularAds(1)" class="bg-blue-50 hover:bg-blue-100 text-blue-600 w-10 h-10 rounded-full flex items-center justify-center transition shadow-sm">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+        <div class="relative overflow-hidden group">
+            <div id="popularAdsContainer" class="flex gap-6 overflow-x-auto scrollbar-hide pb-4 scroll-smooth snap-x snap-mandatory" style="scroll-snap-type: x mandatory;">
                 <!-- Properties will be loaded dynamically by main.js -->
             </div>
         </div>
@@ -459,6 +479,37 @@
         </button>
     </div>
     <script src="/js/ai-agent.js"></script>
+    <script>
+        // Force login on any click for guests on the default page
+        document.addEventListener('DOMContentLoaded', () => {
+            document.body.addEventListener('click', function(e) {
+                if (!window.auth || !window.auth.user) {
+                    const clickable = e.target.closest('a, button, .property-card, select, input');
+                    if (clickable) {
+                        const href = clickable.getAttribute('href');
+                        const onclickStr = clickable.getAttribute('onclick');
+                        // Allow login, signup, language selector, dark mode
+                        if (href === '/login.html' || href === '/signup.html' || 
+                            clickable.id === 'mobileMenuBtn' || clickable.classList.contains('dark-mode-toggle') ||
+                            clickable.id === 'languageSelect' || clickable.id === 'mobileLanguageSelect' ||
+                            (onclickStr && onclickStr.includes('toggleExtraFilters()')) ||
+                            clickable.id === 'scrollLeftBtn' || clickable.id === 'scrollRightBtn') {
+                            return; 
+                        }
+                        
+                        // Let scrollPopularAds work without login? "everytime derect open login"
+                        // I will allow manual scroll to be safe
+                        if (onclickStr && onclickStr.includes('scrollPopularAds')) return;
+                        
+                        // Intercept and redirect
+                        e.preventDefault();
+                        e.stopPropagation();
+                        window.location.href = '/login.html';
+                    }
+                }
+            }, true);
+        });
+    </script>
 </body>
 
 </html>

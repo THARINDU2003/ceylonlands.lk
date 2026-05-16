@@ -123,6 +123,80 @@ async function loadFeaturedProperties() {
     }
 }
 
+// Load Popular Ads for Homepage
+async function loadPopularAds() {
+    try {
+        const grid = document.getElementById('popularAdsContainer');
+        if (!grid) return;
+
+        const response = await fetch(`${API_URL}/properties`);
+        if (!response.ok) throw new Error('Failed to fetch popular properties');
+        const properties = await response.json();
+
+        // Sort by views
+        properties.sort((a, b) => (b.views || 0) - (a.views || 0));
+        const popularProps = properties.slice(0, 9);
+
+        grid.innerHTML = popularProps.map(prop => {
+            let imagesArray = [];
+            try { imagesArray = JSON.parse(prop.images || '[]'); } catch(e){}
+            const firstImage = resolveImagePath(imagesArray[0]);
+            const imageHtml = firstImage ? `<img src="${firstImage}" alt="${prop.title}">` : `<div class="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400"><i class="fas fa-fire fa-3x"></i></div>`;
+            
+            return `
+            <div class="property-card flex-shrink-0 snap-start" style="flex: 0 0 calc(33.333% - 16px); min-width: 280px;" onclick="window.location.href='/property-detail.html?id=${prop.id}'">
+                <div class="card-image">
+                    ${imageHtml}
+                    <span class="sale-badge bg-red-500"><i class="fas fa-fire mr-1"></i> Popular</span>
+                </div>
+                <div class="card-content">
+                    <h3 class="property-title truncate text-gray-800">${prop.title}</h3>
+                    <p class="text-sm text-gray-500 mb-2">${prop.city}, ${prop.district}</p>
+                    <div class="price text-blue-600 font-bold">LKR ${prop.price.toLocaleString()}</div>
+                    <div class="text-xs text-gray-400 mt-2"><i class="fas fa-eye mr-1"></i> ${prop.views || 0} views</div>
+                </div>
+            </div>
+            `;
+        }).join('');
+
+        startAutoScrollPopularAds();
+    } catch (error) {
+        console.error('Error loading popular properties:', error);
+    }
+}
+
+let popularAdsScrollInterval;
+function scrollPopularAds(direction) {
+    const container = document.getElementById('popularAdsContainer');
+    if (!container) return;
+    const scrollAmount = container.clientWidth;
+    container.scrollBy({ left: scrollAmount * direction, behavior: 'smooth' });
+    resetAutoScrollPopularAds();
+}
+
+function startAutoScrollPopularAds() {
+    popularAdsScrollInterval = setInterval(() => {
+        const container = document.getElementById('popularAdsContainer');
+        if (!container) return;
+        
+        // Loop logic
+        if (container.scrollLeft + container.clientWidth >= container.scrollWidth - 10) {
+            container.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+            // Scroll by one card width approximately
+            container.scrollBy({ left: 300, behavior: 'smooth' });
+        }
+    }, 3000);
+}
+
+function resetAutoScrollPopularAds() {
+    clearInterval(popularAdsScrollInterval);
+    startAutoScrollPopularAds();
+}
+
+// Make scrollPopularAds globally available
+window.scrollPopularAds = scrollPopularAds;
+
 // Load property details for detail page
 async function loadPropertyDetail() {
     try {
@@ -266,6 +340,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     if (path === '/' || path === '/index.html') {
         loadFeaturedProperties();
+        loadPopularAds();
     } else if (path === '/properties.html') {
         const urlParams = new URLSearchParams(window.location.search);
         const filters = Object.fromEntries(urlParams.entries());
