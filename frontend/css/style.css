@@ -27,6 +27,31 @@ body {
     transition: background-color 0.3s, color 0.3s;
 }
 
+/* Dark Mode Utility Overrides for Tailwind classes */
+.dark-theme .bg-white {
+    background-color: var(--bg-card) !important;
+}
+.dark-theme .bg-gray-50,
+.dark-theme .bg-gray-100 {
+    background-color: var(--bg-primary) !important;
+}
+.dark-theme .text-gray-900,
+.dark-theme .text-gray-800,
+.dark-theme .text-gray-700 {
+    color: var(--text-main) !important;
+}
+.dark-theme .text-gray-600,
+.dark-theme .text-gray-500,
+.dark-theme .text-gray-400 {
+    color: var(--text-muted) !important;
+}
+.dark-theme .border-gray-100,
+.dark-theme .border-gray-200,
+.dark-theme .border-gray-300,
+.dark-theme .border {
+    border-color: var(--border-color) !important;
+}
+
 /* Custom styles */
 .search-box:focus {
     outline: none;
