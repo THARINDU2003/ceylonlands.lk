@@ -167,7 +167,7 @@
                 await window.auth.register(name, email, password, accountType, companyName);
                 await window.auth.login(email, password); // Auto login
                 showMessage('Account created successfully! Redirecting...', 'success');
-                setTimeout(() => window.location.href = '/index.html', 1500);
+                setTimeout(() => window.location.href = '/user-home.html', 1500);
             } catch (err) {
                 showMessage(err.message, 'error');
             }
